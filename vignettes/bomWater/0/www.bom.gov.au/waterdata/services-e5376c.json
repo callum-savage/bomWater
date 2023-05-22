@@ -1,0 +1,32 @@
+[
+    [
+        "StationName_CodeSpace",
+        "WDTF_regulation_shortname_combination",
+        "station_diary",
+        "DATA_OWNER",
+        "station_diary_status",
+        "ngr_letter",
+        "admin_level",
+        "WDTF_REGULATION",
+        "region_district",
+        "WDTF_REGULATIONS",
+        "admin_name",
+        "REGULATION_NAME",
+        "DATA_OWNER_NAME"
+    ],
+    [
+        "http://www.bom.gov.au/std/water/xml/wio0.2/feature/SamplingPoint/w00002/",
+        "Reg200806.s3.9a_ElectricalConductivityAt25C",
+        "",
+        "w00002",
+        "",
+        "-",
+        "District",
+        "Reg200806.s3.9a",
+        "---",
+        "Reg200806.s3.4a, Reg200806.s3.9a, Reg200806.s3.9d, Reg200806.s3.9g, Reg200806.s3.9h",
+        "---",
+        "Regs 2008 9a, Electrical conductivity at 25C",
+        "ACT - Icon Water Limited"
+    ]
+]
