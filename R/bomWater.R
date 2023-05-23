@@ -320,6 +320,8 @@ get_parameter_list <- function(station_number, return_fields) {
     ),
     collapse = ","
     )
+  } else {
+    params[["returnfields"]] <- paste(return_fields, collapse = ",")
   }
 
   get_bom_request <- make_bom_request(params)
