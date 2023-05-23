@@ -560,7 +560,7 @@ parameters <- function(pars) {
     "Dry Air Temperature",
     "Relative Humidity",
     "Wind Speed",
-    "Electrical Conductivity At 25C",
+    "Electrical Conductivity @ 25C",
     "Turbidity",
     "pH",
     "Water Temperature",
