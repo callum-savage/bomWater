@@ -9,7 +9,6 @@
 #' A tibble is returned with the columns depending on the request. For
 #' \code{get_timeseries} requests, a tibble with zero rows is returned
 #' if there is no data available for that query.
-#' @author Alexander Buzacott
 make_bom_request <- function(params) {
   bom_url <- "http://www.bom.gov.au/waterdata/services"
 
@@ -115,8 +114,6 @@ make_bom_request <- function(params) {
 #' * object_type
 #' * custom_attributes
 #'
-#' @author Alexander Buzacott
-#'
 #' @examples
 #' # Get all Water Course Discharge Stations
 #' \dontrun{
@@ -216,7 +213,6 @@ get_station_list <- function(parameter_type, station_number, bbox, return_fields
 #' @return
 #' Returns a tibble with columns station_name, station_no, station_id, ts_id,
 #' ts_name, parametertype_id, parametertype_name.
-#' @author Alexander Buzacott
 get_timeseries_id <- function(parameter_type, station_number, ts_name) {
   params <- list(
     "request" = "getTimeseriesList",
@@ -244,7 +240,6 @@ get_timeseries_id <- function(parameter_type, station_number, ts_name) {
 #' returned if no data is returned  from the query. The columns of the tibble
 #' are returned as character classes and have not been formatted to more
 #' appropriate correct classes (this happens in other functions).
-#' @author Alexander Buzacott
 get_timeseries_values <- function(ts_id, start_date, end_date, return_fields) {
   params <- list(
     "request" = "getTimeseriesValues",

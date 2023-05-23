@@ -60,7 +60,6 @@
 #' )
 #' }
 #' # See the linked SOS2 manual in See Also to find more timeseries names
-#' @author Alexander Buzacott
 #' @export
 
 get_timeseries <- function(parameter_type,
@@ -552,7 +551,6 @@ get_yearly <- function(parameter_type,
 #' @seealso
 #' * \url{http://www.bom.gov.au/waterdata/}
 #' * [BoM Guide to Sensor Observation Services (SOS2) for Water Data Online](http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf)
-#' @author Alexander Buzacott
 #' @examples
 #' parameters()
 #' parameters("continuous")
