@@ -18,7 +18,7 @@ Imports:
     jsonlite (>= 1.6.1),
     lubridate (>= 1.7.4),
     stringr (>= 1.4.0)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Suggests: 
     ggplot2,
     httptest,
