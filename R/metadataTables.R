@@ -24,10 +24,10 @@ quality_codes <- function() {
   )
 }
 
-#' Access the interplation codes conversion table
+#' Access the interplation types conversion table
 #'
-#' `interpolation_codes()` returns a table which can be used to interpret the
-#' interpolation codes returned by the WISKI API.
+#' `interpolation_types()` returns a table which can be used to interpret the
+#' interpolation types returned by the WISKI API.
 #'
 #' @return
 #' a tibble with three columns: Interpolation Type, Name, and
@@ -35,8 +35,8 @@ quality_codes <- function() {
 #' @export
 #'
 #' @examples
-#' interpolation_codes()
-interpolation_codes <- function() {
+#' interpolation_types()
+interpolation_types <- function() {
   tibble::tibble(
     `Interpolation Type` = as.integer(c(101, 102, 103, 104, 201, 202, 205, 206, 301, 302, 303, 304, 403, 404, 503, 504, 603, 604, 703, 704)),
     Name = c(
