@@ -4,9 +4,8 @@
 #' data quality codes returned by the WISKI API into the human readable codes
 #' used on Water Data Online.
 #'
-#' @returns a tibble with three columns: Quality Code, BOM Quality Code, and Description
-#' @source
-#' [BoM Guide to Sensor Observation Services (SOS2) for Water Data Online](http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf)
+#' @returns
+#' a tibble with three columns: Quality Code, BOM Quality Code, and Description
 #' @export
 #'
 #' @examples
@@ -25,6 +24,18 @@ quality_codes <- function() {
   )
 }
 
+#' Access the interplation codes conversion table
+#'
+#' `interpolation_codes()` returns a table which can be used to interpret the
+#' interpolation codes returned by the WISKI API.
+#'
+#' @return
+#' a tibble with three columns: Interpolation Type, Name, and
+#' Description
+#' @export
+#'
+#' @examples
+#' interpolation_codes()
 interpolation_codes <- function() {
   tibble::tibble(
     `Interpolation Type` = as.integer(c(101, 102, 103, 104, 201, 202, 205, 206, 301, 302, 303, 304, 403, 404, 503, 504, 603, 604, 703, 704)),
