@@ -2,7 +2,6 @@
 % Please edit documentation in R/getSeries.R
 \name{parameters}
 \alias{parameters}
-\alias{parameters()}
 \title{Available water parameters}
 \usage{
 parameters(pars)
