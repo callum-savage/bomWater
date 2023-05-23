@@ -520,7 +520,6 @@ get_yearly <- function(parameter_type,
 }
 
 #' @title Available water parameters
-#' @aliases parameters()
 #' @description
 #' `parameters` returns a vector of parameters that can be retrieved from
 #' Water Data Online.
