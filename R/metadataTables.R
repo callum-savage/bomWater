@@ -5,7 +5,15 @@
 #' used on Water Data Online.
 #'
 #' @returns
-#' a tibble with three columns: Quality Code, BOM Quality Code, and Description
+#' A tibble with three columns: Quality Code, BOM Quality Code, and Description.
+#'
+#' @source
+#' The conversion of SOS2 quality codes into BOM quality codes is from the
+#' \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf}{BOM SOS2 manual}
+#' (6.3.3, pg 41). Quality code descriptions are from
+#' \href{http://www.bom.gov.au/water/hrs/qc_doc.shtml}{Streamflow data quality codes for Hydrologic Reference Stations},
+#' which also contains additional information on how these codes were developed.
+#'
 #' @export
 #'
 #' @examples
@@ -31,7 +39,13 @@ quality_codes <- function() {
 #'
 #' @return
 #' a tibble with three columns: Interpolation Type, Name, and
-#' Description
+#' Description.
+#'
+#' @source
+#' Interpolation types are detailed in the
+#' \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf}{BOM SOS2 manual}
+#' (6.3.2, pg 40).
+#'
 #' @export
 #'
 #' @examples
