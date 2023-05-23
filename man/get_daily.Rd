@@ -121,9 +121,6 @@ get_daily(
 \seealso{
 \itemize{
 \item \url{http://www.bom.gov.au/waterdata/}
-\item \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\\%20to\\%20Sensor\\%20Observation\\%20Services\\%20(SOS2)\\%20for\\%20Water\\%20Data\\%20\\%20Online\\%20v1.0.1.pdf}{BoM Guide to Sensor Observation Services (SOS2) for Water Data Online}
+\item \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf}{BoM Guide to Sensor Observation Services (SOS2) for Water Data Online}
 }
-}
-\author{
-Alexander Buzacott
 }
