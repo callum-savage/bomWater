@@ -298,7 +298,7 @@ get_timeseries_values <- function(ts_id, start_date, end_date, return_fields) {
 #' get_parameter_list(station_number = c("410730", "570946"))
 #' }
 #' @export
-get_parameter_list <- function(station_number, return_fields) {
+get_parameter_list <- function(station_number, return_fields = NULL) {
   params <- list("request" = "getParameterList")
 
   if (!missing(station_number)) {
@@ -310,7 +310,7 @@ get_parameter_list <- function(station_number, return_fields) {
   }
 
   # Set the default return fields
-  if (missing(return_fields)) {
+  if (is.null(return_fields)) {
     params[["returnfields"]] <- paste(c(
       "station_no",
       "station_id",
