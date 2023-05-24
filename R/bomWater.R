@@ -155,44 +155,33 @@ make_bom_request <- function(params) {
 #' get_station_list("Water Course Discharge", "410730", return_fields)
 #' }
 #' @export
-get_station_list <- function(parameter_type, station_number, bbox, return_fields) {
+get_station_list <- function(parameter_type = "Water Course Discharge",
+                             station_number = NULL,
+                             bbox = NULL,
+                             return_fields = c("station_name", "station_no", "station_id", "station_latitude", "station_longitude")
+                             ) {
   params <- list("request" = "getStationList")
-
-  # Set default to return all Water Course Discharge stations
-  if (missing(parameter_type)) {
-    parameter_type <- "Water Course Discharge"
-  }
+  # TODO add in parameter checking
+  # TODO make the parameter explicit in the output or in a message
   params[["parameterType_name"]] <- parameter_type
 
-  if (!missing(station_number)) {
+  if (!is.null(station_number)) {
     # Support multiple stations
     station_number <- paste(station_number, collapse = ",")
     params[["station_no"]] <- station_number
   }
 
-  if (!missing(bbox)) {
+  if (!is.null(bbox)) {
     bbox <- paste(bbox, collapse = ",")
     params[['bbox']] = bbox
   }
 
-  # Set the default return fields
-  if (missing(return_fields)) {
-    params[["returnfields"]] <- paste(c(
-      "station_name",
-      "station_no",
-      "station_id",
-      "station_latitude",
-      "station_longitude"
-    ),
-    collapse = ","
-    )
-  } else {
-    params[["returnfields"]] <- paste(return_fields, collapse = ",")
-  }
+  params[["returnfields"]] <- paste(return_fields, collapse = ",")
 
   get_bom_request <- make_bom_request(params)
 
   # Convert types
+  # TODO never convert station_no
   station_list <- dplyr::mutate_all(
     get_bom_request,
     utils::type.convert,
@@ -213,7 +202,10 @@ get_station_list <- function(parameter_type, station_number, bbox, return_fields
 #' @return
 #' Returns a tibble with columns station_name, station_no, station_id, ts_id,
 #' ts_name, parametertype_id, parametertype_name.
-get_timeseries_id <- function(parameter_type, station_number, ts_name) {
+get_timeseries_id <- function(parameter_type,
+                              station_number,
+                              ts_name
+                              ) {
   params <- list(
     "request" = "getTimeseriesList",
     "parametertype_name" = parameter_type,
@@ -240,7 +232,11 @@ get_timeseries_id <- function(parameter_type, station_number, ts_name) {
 #' returned if no data is returned  from the query. The columns of the tibble
 #' are returned as character classes and have not been formatted to more
 #' appropriate correct classes (this happens in other functions).
-get_timeseries_values <- function(ts_id, start_date, end_date, return_fields) {
+get_timeseries_values <- function(ts_id,
+                                  start_date,
+                                  end_date,
+                                  return_fields
+                                  ) {
   params <- list(
     "request" = "getTimeseriesValues",
     "ts_id" = ts_id,
@@ -296,7 +292,16 @@ get_timeseries_values <- function(ts_id, start_date, end_date, return_fields) {
 #' get_parameter_list(station_number = c("410730", "570946"))
 #' }
 #' @export
-get_parameter_list <- function(station_number, return_fields) {
+get_parameter_list <- function(station_number,
+                               return_fields = c(
+                                 "station_no",
+                                 "station_id",
+                                 "station_name",
+                                 "parametertype_id",
+                                 "parametertype_name",
+                                 "parametertype_unitname",
+                                 "parametertype_shortunitname"
+                               )) {
   params <- list("request" = "getParameterList")
 
   if (!missing(station_number)) {
@@ -307,22 +312,7 @@ get_parameter_list <- function(station_number, return_fields) {
     stop("No station number provided")
   }
 
-  # Set the default return fields
-  if (missing(return_fields)) {
-    params[["returnfields"]] <- paste(c(
-      "station_no",
-      "station_id",
-      "station_name",
-      "parametertype_id",
-      "parametertype_name",
-      "parametertype_unitname",
-      "parametertype_shortunitname"
-    ),
-    collapse = ","
-    )
-  } else {
-    params[["returnfields"]] <- paste(return_fields, collapse = ",")
-  }
+  params[["returnfields"]] <- paste(return_fields, collapse = ",")
 
   get_bom_request <- make_bom_request(params)
 

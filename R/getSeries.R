@@ -65,11 +65,12 @@ get_timeseries <- function(parameter_type,
                            station_number,
                            start_date,
                            end_date,
-                           tz,
+                           tz = "UTC",
                            return_fields,
                            ts_name) {
 
   # If no tz supplied, get from jurisdiction
+  # All of this is currently skipped by the default field
   if (is.null(tz)) {
     # From BoM website:
     # Which time zones are the data displayed in?
@@ -80,9 +81,11 @@ get_timeseries <- function(parameter_type,
     #   Western Australia - UTC +08:00.
 
     # Get the station list and custom attributes to determine correct time zone
-    station_list <- get_station_list(parameter_type,
-                                     station_number,
-                                     return_fields="custom_attributes")
+    station_list <- get_station_list(
+      parameter_type = parameter_type,
+      station_number = station_number,
+      return_fields = "custom_attributes"
+    )
     if (nrow(station_list) == 0) {
       stop(paste("Station number", station_number, "is invalid"))
     }
@@ -156,16 +159,16 @@ get_timeseries <- function(parameter_type,
   }
 
   timeseries_id <- get_timeseries_id(
-    parameter_type,
-    station_number,
-    ts_name
+    parameter_type = parameter_type,
+    station_number = station_number,
+    ts_name = ts_name
   )
 
   timeseries_values <- get_timeseries_values(
-    timeseries_id$ts_id[1],
-    start_date,
-    end_date,
-    return_fields
+    ts_id = timeseries_id$ts_id[1],
+    start_date = start_date,
+    end_date = end_date,
+    return_fields = return_fields
   )
 
   # Only process data if it exists
@@ -208,28 +211,21 @@ get_as_stored <- function(parameter_type,
                           station_number,
                           start_date,
                           end_date,
-                          tz,
-                          return_fields) {
-  parameter_type <-
-    parameters()[tolower(parameter_type) == tolower(parameters())]
+                          tz = NULL,
+                          return_fields = c("Timestamp", "Value", "Quality Code")) {
+  parameter_type <- parameters()[tolower(parameter_type) == tolower(parameters())]
   if (length(parameter_type) == 0) {
     stop("Invalid parameter requested")
   }
 
-  if (missing(tz)) tz <- NULL
-
-  if (missing(return_fields)) {
-    return_fields <- c("Timestamp", "Value", "Quality Code")
-  }
-
   timeseries_values <- get_timeseries(
-    parameter_type,
-    station_number,
-    start_date,
-    end_date,
-    tz,
-    return_fields,
-    "DMQaQc.Merged.AsStored.1"
+    parameter_type = parameter_type,
+    station_number = station_number,
+    start_date = start_date,
+    end_date = end_date,
+    tz = tz,
+    return_fields = return_fields,
+    ts_name = "DMQaQc.Merged.AsStored.1"
   )
 
   return(timeseries_values)
@@ -251,10 +247,9 @@ get_hourly <- function(parameter_type,
                        station_number,
                        start_date,
                        end_date,
-                       tz,
-                       return_fields) {
-  parameter_type <-
-    parameters()[tolower(parameter_type) == tolower(parameters())]
+                       tz = NULL,
+                       return_fields = c("Timestamp", "Value", "Quality Code", "Interpolation Type")) {
+  parameter_type <- parameters()[tolower(parameter_type) == tolower(parameters())]
 
   if (!parameter_type %in% c(
     "Water Course Discharge",
@@ -267,19 +262,14 @@ get_hourly <- function(parameter_type,
     )
   }
 
-  if (missing(tz)) tz <- NULL
-  if (missing(return_fields)) {
-    return_fields <- c("Timestamp", "Value", "Quality Code", "Interpolation Type")
-  }
-
   timeseries_values <- get_timeseries(
-    parameter_type,
-    station_number,
-    start_date,
-    end_date,
-    tz,
-    return_fields,
-    "DMQaQc.Merged.HourlyMean.HR"
+    parameter_type = parameter_type,
+    station_number = station_number,
+    start_date = start_date,
+    end_date = end_date,
+    tz = tz,
+    return_fields = return_fields,
+    ts_name = "DMQaQc.Merged.HourlyMean.HR"
   )
 
   return(timeseries_values)
@@ -334,8 +324,8 @@ get_daily <- function(parameter_type,
                       station_number,
                       start_date,
                       end_date,
-                      var,
-                      aggregation,
+                      var = NULL,
+                      aggregation = "24HR",
                       tz,
                       return_fields) {
   parameter_type <-
@@ -345,7 +335,7 @@ get_daily <- function(parameter_type,
   }
 
   # Handle possible formats of var input
-  if (missing(var)) {
+  if (is.null(var)) {
     if (parameter_type %in% parameters("discrete")) {
       var <- "Total"
     } else {
@@ -520,7 +510,6 @@ get_yearly <- function(parameter_type,
 }
 
 #' @title Available water parameters
-#' @aliases parameters()
 #' @description
 #' `parameters` returns a vector of parameters that can be retrieved from
 #' Water Data Online.
