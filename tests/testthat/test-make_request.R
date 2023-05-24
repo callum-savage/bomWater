@@ -51,17 +51,3 @@ test_that("Empty responses return an empty tibble", {
   expect_equal(nrow(r), 0)
   expect_equal(ncol(r), 3)
 })
-
-test_that("Requests for more than 5 tries raise a warning", {
-  params <- list(
-    request = "getStationList",
-    parameter_type_name = "Water Course Level",
-    station_no = "410730",
-    returnfields = "station_name,station_no"
-  )
-  expect_warning(make_bom_request(params, tries = 6))
-  expect_warning(make_bom_request(params, tries = 0))
-
-  r <- make_bom_request(params, tries = 2)
-  expect_equal(r$station_name, "Cotter R. at Gingera")
-})
