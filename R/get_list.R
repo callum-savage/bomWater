@@ -89,15 +89,15 @@
 get_station_list <- function(parameter_type = "Water Course Discharge",
                              station_number = NULL,
                              bbox = NULL,
-                             return_fields = c("station_name", "station_no", "station_id", "station_latitude", "station_longitude")
+                             return_fields = c("station_no",
+                                               "station_name",
+                                               "station_latitude",
+                                               "station_longitude")
 ) {
   params <- list("request" = "getStationList")
-  # TODO add in parameter checking
-  # TODO make the parameter explicit in the output or in a message
   params[["parameterType_name"]] <- parameter_type
 
   if (!is.null(station_number)) {
-    # Support multiple stations
     station_number <- paste(station_number, collapse = ",")
     params[["station_no"]] <- station_number
   }
@@ -107,21 +107,15 @@ get_station_list <- function(parameter_type = "Water Course Discharge",
     params[['bbox']] = bbox
   }
 
-  params[["returnfields"]] <- paste(return_fields, collapse = ",")
+  if (!is.null(return_fields)) {
+    params[["returnfields"]] <- paste(return_fields, collapse = ",")
+  } else {
+    stop("Return fields must be specified.")
+  }
 
-  get_bom_request <- make_bom_request(params)
-
-  # Convert types
-  # TODO never convert station_no
-  station_list <- dplyr::mutate_all(
-    get_bom_request,
-    utils::type.convert,
-    as.is = TRUE
-  )
-
-  return(station_list)
+  resp <- make_bom_request(params)
+  convert_types(resp)
 }
-
 
 #' @title Retrieve available parameters for stations
 #' @md
@@ -197,4 +191,12 @@ get_parameter_list <- function(station_number,
   )
 
   return(parameter_list)
+}
+
+convert_types <- function(df) {
+  dplyr::mutate(df,
+                dplyr::across(
+                  !dplyr::any_of("station_no"),
+                  \(x) utils::type.convert(x, as.is = TRUE)
+                ))
 }
