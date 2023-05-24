@@ -15,13 +15,15 @@
 #'
 #' @export
 make_bom_request <- function(params, tries = 1) {
-  if (tries > 5) {
-    warning("Warning: too many tries requested. Defaulting to 5 tries.")
-    tries <- 5
+  if (!(tries %in% 1:5)) {
+    warning("Invalid number of tries requested. Defaulting to 1.")
+    tries <- 1
   }
+
   base_params <- list("service" = "kisters",
                       "type" = "QueryServices",
                       "format" = "json")
+
   req <- httr2::request("http://www.bom.gov.au/waterdata/services")
   req <- httr2::req_url_query(req, !!!c(base_params, params))
   req <- httr2::req_error(req, body = body_error)
