@@ -1,3 +1,70 @@
+
+#' @title Available water parameters
+#' @description
+#' `parameters` returns a vector of parameters that can be retrieved from
+#' Water Data Online.
+#' @param pars Optional: if empty all available parameters will be returned.
+#' Alternatively, a vector of the continuous or discrete parameters can be
+#' requested.
+#' @return
+#' A vector of parameters.
+#' @details
+#' The units of the parameters are as follows:
+#'
+#' * Water Course Discharge (m3/s)
+#' * Water Course Level (m)
+#' * Electrical conductivity at 25C (µS/cm)
+#' * Turbidity (NTU)
+#' * pH
+#' * Water Temperature (ºC)
+#' * Storage Volume (ML)
+#' * Storage Level (m)
+#' * Ground Water Level (m)
+#' * Rainfall (mm)
+#' * Evaporation (mm)
+#' * Dry Air Temperature (ºC)
+#' * Relative Humidity (%)
+#' * Wind Speed (m/s)
+#' @md
+#' @seealso
+#' * \url{http://www.bom.gov.au/waterdata/}
+#' * \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide%20to%20Sensor%20Observation%20Services%20(SOS2)%20for%20Water%20Data%20%20Online%20v1.0.1.pdf}{BoM Guide to Sensor Observation Services (SOS2) for Water Data Online}
+#' @examples
+#' parameters()
+#' parameters("continuous")
+#' parameters("discrete")
+#' @export
+parameters <- function(pars) {
+  continuous <- c(
+    "Dry Air Temperature",
+    "Relative Humidity",
+    "Wind Speed",
+    "Electrical Conductivity @ 25C",
+    "Turbidity",
+    "pH",
+    "Water Temperature",
+    "Ground Water Level",
+    "Water Course Level",
+    "Water Course Discharge",
+    "Storage Level",
+    "Storage Volume"
+  )
+  discrete <- c(
+    "Rainfall",
+    "Evaporation"
+  )
+
+  if (missing(pars)) {
+    return(c(discrete, continuous))
+  } else {
+    if (!tolower(pars) %in% c("continuous", "discrete")) {
+      stop("Invalid parameter category entered")
+    }
+    return(get(pars))
+  }
+}
+
+
 #' Access the quality code conversion table
 #'
 #' `quality_codes()` returns a table which can be used to convert the numeric
