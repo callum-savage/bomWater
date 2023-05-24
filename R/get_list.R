@@ -94,11 +94,13 @@ get_station_list <- function(parameter_type = "Water Course Discharge",
                                                "station_latitude",
                                                "station_longitude")
 ) {
-  params <- list("request" = "getStationList")
-  params[["parameterType_name"]] <- parameter_type
-  params[["station_no"]] <- paste(station_number, collapse = ",")
-  params[['bbox']] = paste(bbox, collapse = ",")
-  params[["returnfields"]] <- paste(return_fields, collapse = ",")
+  params <- collapse_params(
+    request = "getStationList",
+    parameterType_name = parameter_type,
+    station_no = station_number,
+    bbox = bbox,
+    returnfields = return_fields
+  )
   resp <- make_bom_request(params)
   convert_types(resp)
 }
@@ -152,18 +154,22 @@ get_parameter_list <- function(station_number,
                                  "parametertype_name",
                                  "parametertype_unitname"
                                )) {
-  params <- list("request" = "getParameterList")
-  params[["station_no"]] <- paste(station_number, collapse = ",")
-  params[["returnfields"]] <- paste(return_fields, collapse = ",")
+  params <- collapse_params(
+    request = "getParameterList",
+    station_no = station_number,
+    returnfields = return_fields
+  )
   resp <- make_bom_request(params)
   convert_types(resp)
 }
 
 convert_types <- function(df) {
-  dplyr::mutate(
-    df,
-    dplyr::across(
-      !dplyr::any_of("station_no"),
-      \(x) utils::type.convert(x, as.is = TRUE)
-  ))
+  cols <- names(df) != "station_no"
+  df[cols] <- type.convert(df[cols], as.is = TRUE)
+  df
+}
+
+collapse_params <- function(...) {
+  params <- list(...)
+  lapply(params, \(x) paste(x, collapse = ","))
 }
