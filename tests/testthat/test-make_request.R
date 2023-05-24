@@ -38,3 +38,16 @@ test_that("Large requests cause an error", {
   expect_error(make_bom_request(params))
   # TODO add error message checking
 })
+
+test_that("Empty responses return an empty tibble", {
+  params <- list(
+      request = "getTimeseriesValues",
+      ts_id = "196412010",
+      from = "2019-01-01T00:00:00+00:00",
+      to = "2019-12-31T00:00:00+00:00",
+      returnfields = "Timestamp,Value,Quality Code"
+    )
+  r <- make_bom_request(params)
+  expect_equal(nrow(r), 0)
+  expect_equal(ncol(r), 3)
+})

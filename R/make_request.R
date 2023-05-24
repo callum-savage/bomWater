@@ -1,9 +1,10 @@
-#' @title Query the BoM WISKI API
-#' @description
-#' This function queries the Bureau of Meteorology Water Data KISTERS API.
-#' A parameter list is passed to make request and the JSON return is parsed
+#' Query the BOM WISKI API
+#'
+#' This function queries the Bureau of Meteorology (BOM) Water Data KISTERS API.
+#' A parameter list is passed to make a the request and the JSON return is parsed
 #' depending on what is requested. This function can be used if you want to
 #' build your own JSON queries.
+#'
 #' @param params A named list of parameters.
 #' @param tries Number of times to query the API. Only a single call is made by
 #' default, and the maximum number of tries is 5.
@@ -36,12 +37,15 @@ make_bom_request <- function(params, tries = 1) {
     resp_cols <- json[1,]
     resp_data <- json[-1, , drop = FALSE]
   }
-  colnames(resp_data) <- resp_cols
-  tbl <- tibble::as_tibble(resp_data)
+
+  if (length(dim(resp_data)) == 2) {
+    colnames(resp_data) <- resp_cols
+    tbl <- tibble::as_tibble(resp_data)
+  } else {
+    tbl <- tibble::as_tibble(sapply(resp_cols, \(x) character()))
+  }
   tbl
 }
-
-
 
 get_body_error <- function(resp) {
   httr2::resp_body_json(resp, simplifyVector = TRUE)$message
