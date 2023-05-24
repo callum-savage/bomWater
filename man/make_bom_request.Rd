@@ -13,9 +13,9 @@ make_bom_request(params, tries = 1)
 default, and the maximum number of tries is 5.}
 }
 \value{
-A tibble is returned with the columns depending on the request. For
-\code{get_timeseries} requests, a tibble with zero rows is returned
-if there is no data available for that query.
+A tibble with columns depending on the request. For
+  \code{\link{get_timeseries}} requests, a tibble with zero rows is returned
+  if there is no data available for that query.
 }
 \description{
 This function queries the Bureau of Meteorology (BOM) Water Data KISTERS API.

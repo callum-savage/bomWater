@@ -7,24 +7,25 @@
 #'
 #' @param params A named list of parameters.
 #' @param tries Number of times to query the API. Only a single call is made by
-#' default, and the maximum number of tries is 5.
-#' @return
-#' A tibble is returned with the columns depending on the request. For
-#' \code{get_timeseries} requests, a tibble with zero rows is returned
-#' if there is no data available for that query.
+#'   default, and the maximum number of tries is 5.
+#'
+#' @returns A tibble with columns depending on the request. For
+#'   \code{\link{get_timeseries}} requests, a tibble with zero rows is returned
+#'   if the query has no result.
+#'
+#' @export
 make_bom_request <- function(params, tries = 1) {
+  if (tries > 5) {
+    warning("Warning: too many tries requested. Defaulting to 5 tries.")
+    tries <- 5
+  }
   base_params <- list("service" = "kisters",
                       "type" = "QueryServices",
                       "format" = "json")
   req <- httr2::request("http://www.bom.gov.au/waterdata/services")
   req <- httr2::req_url_query(req, !!!c(base_params, params))
-  req <- httr2::req_error(req, body = get_body_error)
-  if (tries > 5) {
-    warning("Warning: too many tries requested. Defaulting to 5 tries.")
-    tries <- 5
-  }
+  req <- httr2::req_error(req, body = body_error)
   req <- httr2::req_retry(req, max_tries = tries)
-
   resp <- httr2::req_perform(req)
   json <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
@@ -47,6 +48,6 @@ make_bom_request <- function(params, tries = 1) {
   tbl
 }
 
-get_body_error <- function(resp) {
+body_error <- function(resp) {
   httr2::resp_body_json(resp, simplifyVector = TRUE)$message
 }
