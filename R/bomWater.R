@@ -19,96 +19,64 @@ make_bom_request <- function(params) {
   )
   query <- c(base_params, params)
 
-  resp <- request(bom_url) |>
-    req_url_query(!!!query) |>
-    req_error() |>
-    req_perform()
+  resp <- httr2::request(bom_url) |>
+    httr2::req_url_query(!!!query) |>
+    httr2::req_error() |>
+    httr2::req_perform() |>
+    httr2::resp_body_json(simplifyVector = TRUE)
 
-  # UP to here is fine
+  colnames(resp) <- resp[1,]
+  tbl <- tibble::as_tibble(resp[-1, , drop = FALSE])
 
-
-  x <- resp |> resp_body_json()
-  z <- x[[1]]
-
-  column_names <- unlist(stringr::str_split(z$columns, ","))
-  tbl <- tibble::as_tibble(z$data[[1]])
-
-
-
-
-  colnames(json) <- json[1, ]
-  tbl <- dplyr::slice(tibble::as_tibble(json), -1)
-} else if (params$request == "getTimeseriesValues") {
-  column_names <- unlist(stringr::str_split(json$columns, ","))
-  if (length(json$data[[1]]) == 0) {
-    tbl <- tibble::tibble(
-      Timestamp = lubridate::as_datetime(lubridate::ymd()),
-      Value = numeric(),
-      `Quality Code` = integer()
-    )
-  } else {
-    colnames(json$data[[1]]) <- column_names
-    tbl <- tibble::as_tibble(json$data[[1]])
-  }
-
-
-  r <- tryCatch(
-    {
-      r <- httr::RETRY("GET", bom_url, query = c(base_params, params), times = 1, quiet = TRUE)
-      httr::stop_for_status(r, task = "request water data from BoM")
-      httr::warn_for_status(r, task = "request water data from BoM")
-    },
-    error = function(e) {
-      message(strwrap(
-        prefix = " ", initial = "",
-        "Request for water data failed. Check your request and make sure
-         http://www.bom.gov.au/waterdata/ is online"
-      ))
-      message("Error message:")
-      message(e$message)
-    },
-    warning = function(w) {
-      message("Request for water data raised a warning. Warning message:")
-      message(w$message)
-    }
-  )
-  a <- httr::content(r, "text")
-
-  json <- jsonlite::fromJSON(a)
-
-  # Check for errors in reponse
-  if (json$type == "error") {
-    stop(
-      "        Request made sucessfully, but response contained an error.\n",
-      "Error code:    ", json$code,
-      "\nError message: ", json$message
-    )
-  }
-
-  if (params$request %in% c(
-    "getParameterList",
-    "getSiteList",
-    "getStationList",
-    "getTimeseriesList"
-  )) {
-    if (json[1] == "No matches.") {
-      stop("No parameter type and station number match found")
-    }
-    colnames(json) <- json[1, ]
-    tbl <- dplyr::slice(tibble::as_tibble(json), -1)
-  } else if (params$request == "getTimeseriesValues") {
-    column_names <- unlist(stringr::str_split(json$columns, ","))
-    if (length(json$data[[1]]) == 0) {
-      tbl <- tibble::tibble(
-        Timestamp = lubridate::as_datetime(lubridate::ymd()),
-        Value = numeric(),
-        `Quality Code` = integer()
-      )
-    } else {
-      colnames(json$data[[1]]) <- column_names
-      tbl <- tibble::as_tibble(json$data[[1]])
-    }
-  }
+#
+#
+#   r <- tryCatch(
+#     {
+#       r <- httr::RETRY("GET", bom_url, query = c(base_params, params), times = 1, quiet = TRUE)
+#       httr::stop_for_status(r, task = "request water data from BoM")
+#       httr::warn_for_status(r, task = "request water data from BoM")
+#     },
+#     error = function(e) {
+#       message(strwrap(
+#         prefix = " ", initial = "",
+#         "Request for water data failed. Check your request and make sure
+#          http://www.bom.gov.au/waterdata/ is online"
+#       ))
+#       message("Error message:")
+#       message(e$message)
+#     },
+#     warning = function(w) {
+#       message("Request for water data raised a warning. Warning message:")
+#       message(w$message)
+#     }
+#   )
+#   json <- jsonlite::fromJSON(httr::content(r, "text"))
+#
+#
+#   if (params$request %in% c(
+#     "getParameterList",
+#     "getSiteList",
+#     "getStationList",
+#     "getTimeseriesList"
+#   )) {
+#     if (json[1] == "No matches.") {
+#       stop("No parameter type and station number match found")
+#     }
+#     colnames(json) <- json[1, ]
+#     tbl <- dplyr::slice(tibble::as_tibble(json), -1)
+#   } else if (params$request == "getTimeseriesValues") {
+#     column_names <- unlist(stringr::str_split(json$columns, ","))
+#     if (length(json$data[[1]]) == 0) {
+#       tbl <- tibble::tibble(
+#         Timestamp = lubridate::as_datetime(lubridate::ymd()),
+#         Value = numeric(),
+#         `Quality Code` = integer()
+#       )
+#     } else {
+#       colnames(json$data[[1]]) <- column_names
+#       tbl <- tibble::as_tibble(json$data[[1]])
+#     }
+#   }
   return(tbl)
 }
 
