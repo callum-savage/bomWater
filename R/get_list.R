@@ -96,13 +96,8 @@ get_station_list <- function(parameter_type = "Water Course Discharge",
 ) {
   params <- list("request" = "getStationList")
   params[["parameterType_name"]] <- parameter_type
-  if (!is.null(station_number)) {
-    params[["station_no"]] <- paste(station_number, collapse = ",")
-  }
-  if (!is.null(bbox)) {
-    bbox <- paste(bbox, collapse = ",")
-    params[['bbox']] = bbox
-  }
+  params[["station_no"]] <- paste(station_number, collapse = ",")
+  params[['bbox']] = paste(bbox, collapse = ",")
   params[["returnfields"]] <- paste(return_fields, collapse = ",")
   resp <- make_bom_request(params)
   convert_types(resp)
