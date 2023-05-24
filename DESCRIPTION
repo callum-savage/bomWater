@@ -17,7 +17,8 @@ Imports:
     httr (>= 1.4.1),
     jsonlite (>= 1.6.1),
     lubridate (>= 1.7.4),
-    stringr (>= 1.4.0)
+    stringr (>= 1.4.0),
+    httr2 (>= 0.2.2)
 RoxygenNote: 7.2.3
 Suggests: 
     ggplot2,
