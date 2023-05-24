@@ -5,6 +5,8 @@
 #' depending on what is requested. This function can be used if you want to
 #' build your own JSON queries.
 #' @param params A named list of parameters.
+#' @param tries Number of times to query the API. Only a single call is made by
+#' default, and the maximum number of tries is 5.
 #' @return
 #' A tibble is returned with the columns depending on the request. For
 #' \code{get_timeseries} requests, a tibble with zero rows is returned
@@ -37,56 +39,6 @@ make_bom_request <- function(params, tries = 1) {
   colnames(resp_data) <- resp_cols
   tbl <- tibble::as_tibble(resp_data)
   tbl
-
-#
-#   r <- tryCatch(
-#     {
-#       r <- httr::RETRY("GET", bom_url, query = c(base_params, params), times = 1, quiet = TRUE)
-#       httr::stop_for_status(r, task = "request water data from BoM")
-#       httr::warn_for_status(r, task = "request water data from BoM")
-#     },
-#     error = function(e) {
-#       message(strwrap(
-#         prefix = " ", initial = "",
-#         "Request for water data failed. Check your request and make sure
-#          http://www.bom.gov.au/waterdata/ is online"
-#       ))
-#       message("Error message:")
-#       message(e$message)
-#     },
-#     warning = function(w) {
-#       message("Request for water data raised a warning. Warning message:")
-#       message(w$message)
-#     }
-#   )
-#   json <- jsonlite::fromJSON(httr::content(r, "text"))
-#
-#
-#   if (params$request %in% c(
-#     "getParameterList",
-#     "getSiteList",
-#     "getStationList",
-#     "getTimeseriesList"
-#   )) {
-#     if (json[1] == "No matches.") {
-#       stop("No parameter type and station number match found")
-#     }
-#     colnames(json) <- json[1, ]
-#     tbl <- dplyr::slice(tibble::as_tibble(json), -1)
-#   } else if (params$request == "getTimeseriesValues") {
-#     column_names <- unlist(stringr::str_split(json$columns, ","))
-#     if (length(json$data[[1]]) == 0) {
-#       tbl <- tibble::tibble(
-#         Timestamp = lubridate::as_datetime(lubridate::ymd()),
-#         Value = numeric(),
-#         `Quality Code` = integer()
-#       )
-#     } else {
-#       colnames(json$data[[1]]) <- column_names
-#       tbl <- tibble::as_tibble(json$data[[1]])
-#     }
-#   }
-  # return(tbl)
 }
 
 #' @title Retrieve water observation stations

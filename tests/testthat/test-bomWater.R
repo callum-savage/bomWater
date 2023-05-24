@@ -1,5 +1,14 @@
 #not_cran <- Sys.getenv("NOT_CRAN")
 #internet <- curl::has_internet()
+#
+# TESTS TO ADD
+#
+# - Warn when silently returning no results
+# - Check bad date inputs
+# - Invalid input types
+# - Inputs out of range
+# - Unknown return fields or parameters
+# - Unknon request (should still return json as not all requests are covered)
 
 test_that("I can make requests to BoM", {
   return_fields <- c("station_name", "station_no", "station_id", "station_latitude", "station_longitude")
@@ -29,6 +38,8 @@ test_that("Large requests cause an error", {
   expect_error(make_bom_request(params))
   # TODO add error message checking
 })
+
+
 
 test_that("I can get a station list", {
   r <- get_station_list(
