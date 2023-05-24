@@ -163,13 +163,18 @@ get_parameter_list <- function(station_number,
   convert_types(resp)
 }
 
-convert_types <- function(df) {
-  cols <- names(df) != "station_no"
-  df[cols] <- type.convert(df[cols], as.is = TRUE)
-  df
-}
-
-collapse_params <- function(...) {
-  params <- list(...)
-  lapply(params, \(x) paste(x, collapse = ","))
+# TODO return custom attributes as a nested data frame?
+get_data_owner <- function(parameter_type, station_number) {
+  station_list <- get_station_list(
+    parameter_type = parameter_type,
+    station_number = station_number,
+    return_fields = c("station_no", "custom_attributes")
+  )
+  if (nrow(station_list) == 0) {
+    stop(paste("Station number", station_number, "is invalid"))
+  } else if (!("DATA_OWNER" %in% names(station_list))) {
+    warning(paste("Unable to find data owner for station ", station_number))
+    return(character())
+  }
+  station_list$DATA_OWNER_NAME
 }
