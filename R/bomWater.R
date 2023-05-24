@@ -10,42 +10,30 @@
 #' \code{get_timeseries} requests, a tibble with zero rows is returned
 #' if there is no data available for that query.
 make_bom_request <- function(params) {
-  # Construct query
-  bom_url <- "http://www.bom.gov.au/waterdata/services"
-  base_params <- list(
-    "service" = "kisters",
-    "type" = "QueryServices",
-    "format" = "json"
-  )
-  query <- c(base_params, params)
+  base_params <- list("service" = "kisters",
+                      "type" = "QueryServices",
+                      "format" = "json")
+  req <- httr2::request("http://www.bom.gov.au/waterdata/services")
+  req <- httr2::req_url_query(req, !!!c(base_params, params))
+  req <- httr2::req_error(req, body = get_body_error)
 
-  # Get response
-  resp <- httr2::request(bom_url) |>
-    httr2::req_url_query(!!!query) |>
-    httr2::req_error() |>
-    httr2::req_perform() |>
-    httr2::resp_body_json(simplifyVector = TRUE)
+  # TODO add in a 'times' argument, defaulting to 1
+  resp <- httr2::req_perform(req)
+  json <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
   # Convert response into a tidy tibble
+  # TODO check for other request types (including 'unknown')
   if (params$request == "getTimeseriesValues") {
-    columns <- unlist(stringr::str_split(resp$columns, ","))
-    data <- resp$data[[1]]
+    resp_cols <- unlist(stringr::str_split(json$columns, ","))
+    resp_data <- json$data[[1]]
   } else {
-    columns <- resp[1,]
-    data <- resp[-1, , drop = FALSE]
+    resp_cols <- json[1,]
+    resp_data <- json[-1, , drop = FALSE]
   }
+  colnames(resp_data) <- resp_cols
+  tbl <- tibble::as_tibble(resp_data)
+  tbl
 
-  colnames(data) <- columns
-  tbl <- tibble::as_tibble(data)
-
-
-
-
-
-
-
-
-#
 #
 #   r <- tryCatch(
 #     {
@@ -94,7 +82,7 @@ make_bom_request <- function(params) {
 #       tbl <- tibble::as_tibble(json$data[[1]])
 #     }
 #   }
-  return(tbl)
+  # return(tbl)
 }
 
 #' @title Retrieve water observation stations
@@ -366,9 +354,6 @@ get_parameter_list <- function(station_number, return_fields) {
   return(parameter_list)
 }
 
-
-
-
-
-
-
+get_body_error <- function(resp) {
+  httr2::resp_body_json(resp, simplifyVector = TRUE)$message
+}
