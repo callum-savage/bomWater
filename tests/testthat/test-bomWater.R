@@ -1,5 +1,5 @@
-not_cran <- Sys.getenv("NOT_CRAN")
-internet <- curl::has_internet()
+#not_cran <- Sys.getenv("NOT_CRAN")
+#internet <- curl::has_internet()
 
 test_that("I can make requests to BoM", {
   params <- list(
@@ -14,154 +14,73 @@ test_that("I can make requests to BoM", {
       "station_longitude"
     ), collapse = ",")
   )
-  if (not_cran != FALSE & internet == TRUE) {
-    r <- make_bom_request(params)
-  } else {
-    with_mock_api({
-      r <- make_bom_request(params)
-    })
-  }
+  r <- make_bom_request(params)
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(r$station_id, "13360")
   expect_equal(ncol(r), 5)
   expect_equal(nrow(r), 1)
 })
 
-
 test_that("I can get a station list", {
-  if (not_cran != FALSE & internet == TRUE) {
-    r <- get_station_list("Rainfall", station_number = "570946")
-  } else {
-    with_mock_api({
-      r <- get_station_list("Rainfall", station_number = "570946")
-    })
-  }
+  r <- get_station_list("Rainfall", station_number = "570946")
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(nrow(r), 1)
   expect_equal(r$station_name, "Cotter Hut")
   expect_equal(r$station_no, 570946)
   expect_equal(r$station_id, 13643)
-  expect_equal(r$station_latitude, -35.64947222)
+  expect_equal(r$station_latitude,-35.64947222)
   expect_equal(r$station_longitude, 148.83144444)
 
-  if (not_cran != FALSE & internet == TRUE) {
-    r <- get_station_list("Rainfall", station_number = c("570946", "410730"))
-  } else {
-    with_mock_api({
-      r <- get_station_list("Rainfall", station_number = c("570946", "410730"))
-    })
-  }
+  r <- get_station_list("Rainfall", station_number = c("570946", "410730"))
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(nrow(r), 2)
   expect_equal(r$station_name[2], "Cotter R. at Gingera")
 })
 
-
-
 test_that("I can get a timeseries ID", {
-  if (not_cran != FALSE & internet == TRUE) {
-    r <- get_timeseries_id(
-      "Water Course Discharge",
-      "410730",
-      "DMQaQc.Merged.DailyMean.24HR"
-    )
-  } else {
-    with_mock_api({
-      r <- get_timeseries_id(
-        "Water Course Discharge",
-        "410730",
-        "DMQaQc.Merged.DailyMean.24HR"
-      )
-    })
-  }
+  r <- get_timeseries_id("Water Course Discharge",
+                         "410730",
+                         "DMQaQc.Merged.DailyMean.24HR")
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(ncol(r), 7)
   expect_equal(nrow(r), 1)
   expect_equal(r$ts_id, "1573010")
 })
 
-
-
 test_that("I can get timeseries values", {
   # Berthong annual rainfall
-  if (not_cran != FALSE & internet == TRUE) {
-    r <- get_timeseries_values(148131010,
-      "2016-01-01",
-      "2016-12-31",
-      return_fields = c(
-        "Timestamp",
-        "Value",
-        "Quality Code",
-        "Interpolation Type"
-      )
-    )
-  } else {
-    with_mock_api({
-      r <- get_timeseries_values(148131010,
-        "2016-01-01",
-        "2016-12-31",
-        return_fields = c(
-          "Timestamp",
-          "Value",
-          "Quality Code",
-          "Interpolation Type"
-        )
-      )
-    })
-  }
-
+  r <- get_timeseries_values(
+    ts_id = 148131010,
+    start_date = "2016-01-01",
+    end_date = "2016-12-31",
+    return_fields = c("Timestamp",
+                      "Value",
+                      "Quality Code",
+                      "Interpolation Type")
+  )
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(ncol(r), 4)
   expect_equal(nrow(r), 1)
   expect_equal(r$Value, "879")
 })
 
-
 test_that("No results for parameter type and ID mistmatch", {
-  if (not_cran != FALSE & internet == TRUE) {
-    r <- get_timeseries_id(
-      "Water Course Discharge",
-      "570946",
-      "DMQaQc.Merged.DailyMean.24HR"
-    )
-    expect_equal(nrow(r), 0)
-  } else {
-    with_mock_api({
-      r <- get_timeseries_id(
-        "Water Course Discharge",
-        "570946",
-        "DMQaQc.Merged.DailyMean.24HR"
-      )
-      expect_equal(nrow(r), 0)
-    })
-  }
+  r <- get_timeseries_id(parameter_type = "Water Course Discharge",
+                         station_number = "570946",
+                         ts_name = "DMQaQc.Merged.DailyMean.24HR")
+  expect_equal(nrow(r), 0)
 })
 
-
 test_that("get timeseries puts it all together", {
-  if (not_cran != FALSE & internet == TRUE) {
-    r <- get_timeseries(
-      "Water Course Discharge",
-      "410730",
-      "2020-01-01",
-      "2020-01-07",
-      NULL,
-      "Timestamp,Value,Quality Code",
-      "DMQaQc.Merged.DailyMean.24HR"
-    )
-  } else {
-    with_mock_api({
-      r <- get_timeseries(
-        "Water Course Discharge",
-        "410730",
-        "2020-01-01",
-        "2020-01-07",
-        NULL,
-        "Timestamp,Value,Quality Code",
-        "DMQaQc.Merged.DailyMean.24HR"
-      )
-    })
-  }
+  r <- get_timeseries(
+    "Water Course Discharge",
+    "410730",
+    "2020-01-01",
+    "2020-01-07",
+    NULL,
+    "Timestamp,Value,Quality Code",
+    "DMQaQc.Merged.DailyMean.24HR"
+  )
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(ncol(r), 3)
   expect_equal(nrow(r), 7)
