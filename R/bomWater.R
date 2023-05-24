@@ -9,15 +9,19 @@
 #' A tibble is returned with the columns depending on the request. For
 #' \code{get_timeseries} requests, a tibble with zero rows is returned
 #' if there is no data available for that query.
-make_bom_request <- function(params) {
+make_bom_request <- function(params, tries = 1) {
   base_params <- list("service" = "kisters",
                       "type" = "QueryServices",
                       "format" = "json")
   req <- httr2::request("http://www.bom.gov.au/waterdata/services")
   req <- httr2::req_url_query(req, !!!c(base_params, params))
   req <- httr2::req_error(req, body = get_body_error)
+  if (tries > 5) {
+    warning("Warning: too many tries requested. Defaulting to 5 tries.")
+    tries <- 5
+  }
+  req <- httr2::req_retry(req, max_tries = tries)
 
-  # TODO add in a 'times' argument, defaulting to 1
   resp <- httr2::req_perform(req)
   json <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
