@@ -10,8 +10,8 @@
 #' \code{get_timeseries} requests, a tibble with zero rows is returned
 #' if there is no data available for that query.
 make_bom_request <- function(params) {
+  # Construct query
   bom_url <- "http://www.bom.gov.au/waterdata/services"
-
   base_params <- list(
     "service" = "kisters",
     "type" = "QueryServices",
@@ -19,14 +19,31 @@ make_bom_request <- function(params) {
   )
   query <- c(base_params, params)
 
+  # Get response
   resp <- httr2::request(bom_url) |>
     httr2::req_url_query(!!!query) |>
     httr2::req_error() |>
     httr2::req_perform() |>
     httr2::resp_body_json(simplifyVector = TRUE)
 
-  colnames(resp) <- resp[1,]
-  tbl <- tibble::as_tibble(resp[-1, , drop = FALSE])
+  # Convert response into a tidy tibble
+  if (params$request == "getTimeseriesValues") {
+    columns <- unlist(stringr::str_split(resp$columns, ","))
+    data <- resp$data[[1]]
+  } else {
+    columns <- resp[1,]
+    data <- resp[-1, , drop = FALSE]
+  }
+
+  colnames(data) <- columns
+  tbl <- tibble::as_tibble(data)
+
+
+
+
+
+
+
 
 #
 #
