@@ -17,7 +17,8 @@
 make_bom_request <- function(params, max_tries = 1) {
   req <- construct_bom_req(params, max_tries)
   resp <- httr2::req_perform(req)
-  tidy_bom_resp(resp, params$request)
+  json <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+  tidy_bom_json(json, params)
 }
 
 construct_bom_req <- function(params, max_tries) {
@@ -33,9 +34,8 @@ construct_bom_req <- function(params, max_tries) {
   req
 }
 
-tidy_bom_resp <- function(resp, request) {
-  json <- httr2::resp_body_json(resp, simplifyVector = TRUE)
-  if (request == "getTimeseriesValues") {
+tidy_bom_json <- function(json, params) {
+  if (params$request == "getTimeseriesValues") {
     resp_cols <- unlist(stringr::str_split(json$columns, ","))
     resp_data <- json$data[[1]]
   } else {
