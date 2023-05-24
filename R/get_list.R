@@ -96,23 +96,14 @@ get_station_list <- function(parameter_type = "Water Course Discharge",
 ) {
   params <- list("request" = "getStationList")
   params[["parameterType_name"]] <- parameter_type
-
   if (!is.null(station_number)) {
-    station_number <- paste(station_number, collapse = ",")
-    params[["station_no"]] <- station_number
+    params[["station_no"]] <- paste(station_number, collapse = ",")
   }
-
   if (!is.null(bbox)) {
     bbox <- paste(bbox, collapse = ",")
     params[['bbox']] = bbox
   }
-
-  if (!is.null(return_fields)) {
-    params[["returnfields"]] <- paste(return_fields, collapse = ",")
-  } else {
-    stop("Return fields must be specified.")
-  }
-
+  params[["returnfields"]] <- paste(return_fields, collapse = ",")
   resp <- make_bom_request(params)
   convert_types(resp)
 }
@@ -162,41 +153,22 @@ get_station_list <- function(parameter_type = "Water Course Discharge",
 get_parameter_list <- function(station_number,
                                return_fields = c(
                                  "station_no",
-                                 "station_id",
                                  "station_name",
-                                 "parametertype_id",
                                  "parametertype_name",
-                                 "parametertype_unitname",
-                                 "parametertype_shortunitname"
+                                 "parametertype_unitname"
                                )) {
   params <- list("request" = "getParameterList")
-
-  if (!missing(station_number)) {
-    # Support multiple stations
-    station_number <- paste(station_number, collapse = ",")
-    params[["station_no"]] <- station_number
-  } else {
-    stop("No station number provided")
-  }
-
+  params[["station_no"]] <- paste(station_number, collapse = ",")
   params[["returnfields"]] <- paste(return_fields, collapse = ",")
-
-  get_bom_request <- make_bom_request(params)
-
-  # Convert types
-  parameter_list <- dplyr::mutate_all(
-    get_bom_request,
-    utils::type.convert,
-    as.is = TRUE
-  )
-
-  return(parameter_list)
+  resp <- make_bom_request(params)
+  convert_types(resp)
 }
 
 convert_types <- function(df) {
-  dplyr::mutate(df,
-                dplyr::across(
-                  !dplyr::any_of("station_no"),
-                  \(x) utils::type.convert(x, as.is = TRUE)
-                ))
+  dplyr::mutate(
+    df,
+    dplyr::across(
+      !dplyr::any_of("station_no"),
+      \(x) utils::type.convert(x, as.is = TRUE)
+  ))
 }
