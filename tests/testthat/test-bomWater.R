@@ -2,19 +2,15 @@
 #internet <- curl::has_internet()
 
 test_that("I can make requests to BoM", {
+  return_fields <- c("station_name", "station_no", "station_id", "station_latitude", "station_longitude")
   params <- list(
-    "request" = "getStationList",
-    "parameter_type_name" = "Water Course Discharge",
-    "station_no" = "410730",
-    "returnfields" = paste(c(
-      "station_name",
-      "station_no",
-      "station_id",
-      "station_latitude",
-      "station_longitude"
-    ), collapse = ",")
+    request = "getStationList",
+    parameter_type_name = "Water Course Discharge",
+    station_no = "410730",
+    returnfields = paste(return_fields, collapse = ",")
   )
   r <- make_bom_request(params)
+
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(r$station_id, "13360")
   expect_equal(ncol(r), 5)
@@ -22,7 +18,11 @@ test_that("I can make requests to BoM", {
 })
 
 test_that("I can get a station list", {
-  r <- get_station_list("Rainfall", station_number = "570946")
+  r <- get_station_list(
+    parameter_type = "Rainfall",
+    station_number = "570946"
+  )
+
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(nrow(r), 1)
   expect_equal(r$station_name, "Cotter Hut")
@@ -31,16 +31,23 @@ test_that("I can get a station list", {
   expect_equal(r$station_latitude,-35.64947222)
   expect_equal(r$station_longitude, 148.83144444)
 
-  r <- get_station_list("Rainfall", station_number = c("570946", "410730"))
+  r <- get_station_list(
+    parameter_type = "Rainfall",
+    station_number = c("570946", "410730")
+  )
+
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(nrow(r), 2)
   expect_equal(r$station_name[2], "Cotter R. at Gingera")
 })
 
 test_that("I can get a timeseries ID", {
-  r <- get_timeseries_id("Water Course Discharge",
-                         "410730",
-                         "DMQaQc.Merged.DailyMean.24HR")
+  r <- get_timeseries_id(
+    parameter_type = "Water Course Discharge",
+    station_number = "410730",
+    ts_name = "DMQaQc.Merged.DailyMean.24HR"
+  )
+
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(ncol(r), 7)
   expect_equal(nrow(r), 1)
@@ -53,11 +60,9 @@ test_that("I can get timeseries values", {
     ts_id = 148131010,
     start_date = "2016-01-01",
     end_date = "2016-12-31",
-    return_fields = c("Timestamp",
-                      "Value",
-                      "Quality Code",
-                      "Interpolation Type")
+    return_fields = c("Timestamp", "Value", "Quality Code", "Interpolation Type")
   )
+
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(ncol(r), 4)
   expect_equal(nrow(r), 1)
@@ -65,22 +70,26 @@ test_that("I can get timeseries values", {
 })
 
 test_that("No results for parameter type and ID mistmatch", {
-  r <- get_timeseries_id(parameter_type = "Water Course Discharge",
-                         station_number = "570946",
-                         ts_name = "DMQaQc.Merged.DailyMean.24HR")
+  r <- get_timeseries_id(
+    parameter_type = "Water Course Discharge",
+    station_number = "570946",
+    ts_name = "DMQaQc.Merged.DailyMean.24HR"
+  )
+
   expect_equal(nrow(r), 0)
 })
 
 test_that("get timeseries puts it all together", {
   r <- get_timeseries(
-    "Water Course Discharge",
-    "410730",
-    "2020-01-01",
-    "2020-01-07",
-    NULL,
-    "Timestamp,Value,Quality Code",
-    "DMQaQc.Merged.DailyMean.24HR"
+    parameter_type = "Water Course Discharge",
+    station_number = "410730",
+    start_date = "2020-01-01",
+    end_date = "2020-01-07",
+    tz = NULL,
+    return_fields = "Timestamp,Value,Quality Code",
+    ts_name = "DMQaQc.Merged.DailyMean.24HR"
   )
+
   expect_equal(class(r)[1], "tbl_df")
   expect_equal(ncol(r), 3)
   expect_equal(nrow(r), 7)
