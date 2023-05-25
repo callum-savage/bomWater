@@ -22,17 +22,17 @@ get_station_list(
 Takes a vector ordered xmin, ymin, xmax, ymax.}
 
 \item{return_fields}{A character vector of station details to be returned.
-See [return_fields()] for a full list of available fields.}
+See \code{\link[=return_fields]{return_fields()}} for a full list of available fields.}
 }
 \value{
 A tibble with columns gven by return_fields.
 }
 \description{
-`get_station_list` queries Water Data Online and returns station details.
-Queries can be input with the desired `parameter` to find all the
+\code{get_station_list} queries Water Data Online and returns station details.
+Queries can be input with the desired \code{parameter} to find all the
 stations on record. If you already have a vector of station numbers, you can
-pass the vector to `station_number` and return the details of those stations.
-`return_fields` can be customised to return various data about the stations.
+pass the vector to \code{station_number} and return the details of those stations.
+\code{return_fields} can be customised to return various data about the stations.
 }
 \examples{
 # Get a list of all Water Course Discharge Stations

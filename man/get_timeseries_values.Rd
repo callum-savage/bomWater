@@ -8,7 +8,7 @@ get_timeseries_values(ts_id, start_date, end_date, return_fields)
 }
 \arguments{
 \item{ts_id}{The timeseries ID for the values of interest. Can be found using
-the function `get_timeseries_id`.}
+the function \code{get_timeseries_id}.}
 
 \item{start_date}{The start date formatted as 'YYYY-MM-DD'.}
 
@@ -23,6 +23,6 @@ are returned as character classes and have not been formatted to more
 appropriate correct classes (this happens in other functions).
 }
 \description{
-`get_timeseries_values` returns the timeseries values between a start and end
+\code{get_timeseries_values} returns the timeseries values between a start and end
 date for given timeseries ID.
 }

@@ -26,12 +26,12 @@ Discharge). See \code{\link{parameters()}} for a full list.}
 
 \item{end_date}{End date formatted as a string or date class (YYYY-MM-DD).}
 
-\item{var}{The daily variable of interest. Valid inputs are `mean`, `min`,
-`max` for continuous series such as discharge and `total` for discrete
+\item{var}{The daily variable of interest. Valid inputs are \code{mean}, \code{min},
+\code{max} for continuous series such as discharge and \code{total} for discrete
 series such as rainfall and evaporation.}
 
 \item{aggregation}{Whether the data is to be aggregated midnight to
-midnight (`24HR`) or from 9am-9am (`09HR`). The default is `24HR`. `09HR`
+midnight (\verb{24HR}) or from 9am-9am (\verb{09HR}). The default is \verb{24HR}. \verb{09HR}
 is only available for mean discharge and total rainfall and evaporation.}
 
 \item{tz}{Optional: the desired time zone for the output timeseries. Input

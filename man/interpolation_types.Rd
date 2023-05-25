@@ -5,7 +5,6 @@
 \title{Access the interplation types conversion table}
 \source{
 Interpolation types are detailed in the
-\href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf}{BOM SOS2 manual}
 (6.3.2, pg 40).
 }
 \usage{
@@ -16,7 +15,7 @@ a tibble with three columns: Interpolation Type, Name, and
 Description.
 }
 \description{
-`interpolation_types()` returns a table which can be used to interpret the
+\code{interpolation_types()} returns a table which can be used to interpret the
 interpolation types returned by the WISKI API.
 }
 \examples{

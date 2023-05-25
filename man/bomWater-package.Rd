@@ -15,4 +15,13 @@ Useful links:
 }
 
 }
+\author{
+\strong{Maintainer}: Savage Callum \email{callum.s.savage@gmail.com}
+
+Authors:
+\itemize{
+  \item Buzacott Alexander \email{abuz5257@uni.sydney.edu.au}
+}
+
+}
 \keyword{internal}

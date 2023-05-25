@@ -19,6 +19,6 @@ Returns a tibble with columns station_name, station_no, station_id, ts_id,
 ts_name, parametertype_id, parametertype_name.
 }
 \description{
-`get_timeseries_id` retrieves the timeseries ID that can be used to obtain
+\code{get_timeseries_id} retrieves the timeseries ID that can be used to obtain
 values for a parameter type, station and timeseries combination.
 }
