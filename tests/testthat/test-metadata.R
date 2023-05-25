@@ -1,3 +1,9 @@
+test_that("Internal data is available", {
+  expect_snapshot_value(bw_parameters_data, style = "deparse")
+  expect_snapshot_value(bw_interpolation_types_data, style = "deparse")
+  expect_snapshot_value(bw_quality_codes_data, style = "deparse")
+})
+
 test_that("I can get a vector of parameters", {
   all <- bw_parameters()
   disc <- bw_parameters("discrete")
