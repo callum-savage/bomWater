@@ -1,3 +1,17 @@
+# TODO document sources
+#
+#' @source
+#' Interpolation types are detailed in the
+#' BOM SOS2 manual](http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf)
+#' (6.3.2, pg 40).
+#'
+#' @source
+#' The conversion of SOS2 quality codes into BOM quality codes is from the
+#' \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf}{BOM SOS2 manual}
+#' (6.3.3, pg 41). Quality code descriptions are from
+#' \href{http://www.bom.gov.au/water/hrs/qc_doc.shtml}{Streamflow data quality codes for Hydrologic Reference Stations},
+#' which also contains additional information on how these codes were developed.
+
 
 #' @title Available water parameters
 #' @description
@@ -65,26 +79,16 @@ parameters <- function(pars) {
 }
 
 
-#' Access the quality code conversion table
+#' Access the bomWater quality code conversion table
 #'
 #' `quality_codes()` returns a table which can be used to convert the numeric
 #' data quality codes returned by the WISKI API into the human readable codes
 #' used on Water Data Online.
-#'
-#' @returns
-#' A tibble with three columns: Quality Code, BOM Quality Code, and Description.
-#'
-#' @source
-#' The conversion of SOS2 quality codes into BOM quality codes is from the
-#' \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf}{BOM SOS2 manual}
-#' (6.3.3, pg 41). Quality code descriptions are from
-#' \href{http://www.bom.gov.au/water/hrs/qc_doc.shtml}{Streamflow data quality codes for Hydrologic Reference Stations},
-#' which also contains additional information on how these codes were developed.
-#'
-#' @export
-#'
+#' @returns A tibble with three columns: Quality Code, BOM Quality Code, and
+#'   Description.
 #' @examples
 #' quality_codes()
+#' @export
 quality_codes <- function() {
   tibble::tibble(
     `Quality Code` = as.integer(c(10, 90, 110, 140, 210)),
@@ -103,20 +107,11 @@ quality_codes <- function() {
 #'
 #' `interpolation_types()` returns a table which can be used to interpret the
 #' interpolation types returned by the WISKI API.
-#'
-#' @return
-#' a tibble with three columns: Interpolation Type, Name, and
-#' Description.
-#'
-#' @source
-#' Interpolation types are detailed in the
-#' \href{http://www.bom.gov.au/waterdata/wiski-web-public/Guide\%20to\%20Sensor\%20Observation\%20Services\%20(SOS2)\%20for\%20Water\%20Data\%20\%20Online\%20v1.0.1.pdf}{BOM SOS2 manual}
-#' (6.3.2, pg 40).
-#'
-#' @export
-#'
+#' @return A tibble with three columns: Interpolation Type, Name, and
+#'   Description.
 #' @examples
 #' interpolation_types()
+#' @export
 interpolation_types <- function() {
   tibble::tibble(
     `Interpolation Type` = as.integer(c(101, 102, 103, 104, 201, 202, 205, 206, 301, 302, 303, 304, 403, 404, 503, 504, 603, 604, 703, 704)),
@@ -170,28 +165,28 @@ interpolation_types <- function() {
 
 return_fields <- function(request) {
   # get station list
-  return_fields <- c(
-    "station_name",
-    "station_longname",
-    "station_no",
-    "station_id",
-    "station_latitude",
-    "station_longitude",
-    "station_carteasting",
-    "station_cartnorthing",
-    "stationparameter_name",
-    "station_georefsystem",
-    "catchment_no",
-    "catchment_id",
-    "catchment_name",
-    "site_no",
-    "site_id",
-    "site_name",
-    "parametertype_id",
-    "parametertype_name",
-    "object_type",
-    "custom_attributes"
-  )
+  # return_fields <- c(
+  #   "station_name",
+  #   "station_longname",
+  #   "station_no",
+  #   "station_id",
+  #   "station_latitude",
+  #   "station_longitude",
+  #   "station_carteasting",
+  #   "station_cartnorthing",
+  #   "stationparameter_name",
+  #   "station_georefsystem",
+  #   "catchment_no",
+  #   "catchment_id",
+  #   "catchment_name",
+  #   "site_no",
+  #   "site_id",
+  #   "site_name",
+  #   "parametertype_id",
+  #   "parametertype_name",
+  #   "object_type",
+  #   "custom_attributes"
+  # )
 
   #get_parameter_list
 
