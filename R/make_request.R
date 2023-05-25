@@ -5,7 +5,7 @@
 #' parsed depending on what is requested. This function can be used if you want
 #' to build your own JSON queries.
 #'
-#' @param params A named list of parameters.
+#' @param params A named list of key-value pairs.
 #' @param max_tries The maximum number of times to retry the request, silently
 #'   capped at 5 tries.
 #'
@@ -18,7 +18,7 @@ make_bom_request <- function(params, max_tries = 1) {
   req <- construct_bom_req(params, max_tries)
   resp <- httr2::req_perform(req)
   json <- httr2::resp_body_json(resp, simplifyVector = TRUE)
-  tidy_bom_json(json, params)
+  unpack_bom_json(json, params)
 }
 
 construct_bom_req <- function(params, max_tries) {
@@ -34,7 +34,7 @@ construct_bom_req <- function(params, max_tries) {
   req
 }
 
-tidy_bom_json <- function(json, params) {
+unpack_bom_json <- function(json, params) {
   if (params$request == "getTimeseriesValues") {
     resp_cols <- unlist(stringr::str_split(json$columns, ","))
     resp_data <- json$data[[1]]

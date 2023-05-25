@@ -60,102 +60,27 @@
 #' }
 #' # See the linked SOS2 manual in See Also to find more timeseries names
 #' @export
-
 get_timeseries <- function(parameter_type,
                            station_number,
                            start_date,
                            end_date,
-                           tz = "UTC",
-                           return_fields,
+                           tz = NULL,
+                           return_fields = c("Timestamp", "Value", "Quality Code"),
                            ts_name) {
-
-  # If no tz supplied, get from jurisdiction
-  # All of this is currently skipped by the default field
   if (is.null(tz)) {
-    # From BoM website:
-    # Which time zones are the data displayed in?
-    #   Time of day is presented in local standard time. Coordinated Universal Timezones (UTC) are:
-    #
-    #   Eastern States (QLD, NSW, ACT, VIC, TAS) - UTC +10:00
-    #   Central States (NT, SA) - UTC +09:30
-    #   Western Australia - UTC +08:00.
-
-    # Get the station list and custom attributes to determine correct time zone
-    station_list <- get_station_list(
-      parameter_type = parameter_type,
-      station_number = station_number,
-      return_fields = "custom_attributes"
-    )
-    if (nrow(station_list) == 0) {
-      stop(paste("Station number", station_number, "is invalid"))
-    }
-
-    jurisdiction <- stringr::str_split_fixed(station_list$DATA_OWNER_NAME, " -", n = 2)[1]
-
-    # Time zones are selected where there is no DST
-    if (jurisdiction %in% c("ACT", "ACTNSW", "NSW", "QLD", "TAS", "VIC")) {
-      tz <- "Australia/Queensland" # AEST
-    } else if (jurisdiction %in% c("SA", "NT")) {
-      tz <- "Australia/Darwin" # ACST
-    } else if (jurisdiction == "WA") {
-      tz <- "Australia/Perth" # AWST
-    } else {
-      message("Jurisdiction not found, returning datetimes in UTC")
-      tz <- "UTC"
-    }
-  } else {
-    # Check if tz is valid
-    if (!tz %in% OlsonNames()) {
-      stop("Invalid tz argument. Check it is in OlsonNames().")
-    }
-    station_list <- get_station_list(parameter_type, station_number)
-    if (nrow(station_list) == 0) {
-      stop(paste("Station number", station_number, "is invalid"))
-    }
+    tz <- get_timezone(parameter_type, station_number, default = "UTC")
+  } else if (!(tz %in% OlsonNames())) {
+    stop("Invalid tz argument. Check it is in OlsonNames().")
   }
 
-  # Check string date input is valid
-  if (is.character(start_date)) {
-    start_date <- lubridate::as_date(start_date, format = "%Y-%m-%d")
-  }
-  if (is.character(end_date)) {
-    end_date <- lubridate::as_date(end_date, format = "%Y-%m-%d")
-  }
-  if (anyNA(c(start_date, end_date))) {
-    stop("Dates must be formatted as %Y-%m-%d (e.g. 2000-01-01)")
-  }
-  # Ensure start is less than end
+  start_date <- parse_bom_date(start_date, tz)
+  end_date <- parse_bom_date(end_date, tz)
   if (start_date > end_date) {
-    stop("start_date must be less than end_date")
+    stop("start_date must be prior to the end_date")
   }
 
-  # Coerce to datetime
-  if (lubridate::is.Date(start_date)) {
-    start_date <- lubridate::force_tz(lubridate::as_datetime(start_date), tz = tz)
-    end_date <- lubridate::force_tz(lubridate::as_datetime(end_date), tz = tz)
-  } else if (!lubridate::is.POSIXt(start_date)) {
-    stop("Provide dates as a character, date, or datetime object")
-  }
-
-  # Fix the offset because BoM expects 00:00 style
-  # despite 0000 conforming to ISO8601
-  start_date <- sub(
-    "(.*\\+)(\\d{2})(\\d{2})", "\\1\\2:\\3",
-    lubridate::format_ISO8601(start_date, usetz = TRUE)
-  )
-  end_date <- sub(
-    "(.*\\+)(\\d{2})(\\d{2})", "\\1\\2:\\3",
-    lubridate::format_ISO8601(end_date, usetz = TRUE)
-  )
-
-  # Only accept one station at a time for now
   if (length(station_number) > 1) {
-    stop("Only a single station can be requested at a time")
-  }
-
-  # If return_fields are missing return Timestamp, Value and Quality Code
-  if (missing(return_fields)) {
-    return_fields <- c("Timestamp", "Value", "Quality Code")
+    stop("Only one station can be requested at a time")
   }
 
   timeseries_id <- get_timeseries_id(
@@ -174,22 +99,14 @@ get_timeseries <- function(parameter_type,
   # Only process data if it exists
   if (nrow(timeseries_values) > 0) {
     if ("Timestamp" %in% colnames(timeseries_values)) {
-      # nolint start
-      suppressMessages({
-        timeseries_values$Timestamp <- lubridate::as_datetime(timeseries_values$Timestamp, tz = tz)
-      })
-      timeseries_values <- dplyr::mutate_at(timeseries_values,
-                                            dplyr::vars(-"Timestamp"),
-                                            utils::type.convert,
-                                            as.is = TRUE
-      )
-      # nolint end
-    } else {
-      timeseries_values <- dplyr::mutate_all(timeseries_values,
-                                             utils::type.convert,
-                                             as.is = TRUE
-      )
+      timeseries_values$Timestamp <-
+        lubridate::as_datetime(timeseries_values$Timestamp, tz = tz)
     }
+    timeseries_values <-
+      convert_types(
+        timeseries_values,
+        dont_convert = c("station_no", "Timestamp")
+      )
   }
   return(timeseries_values)
 }
@@ -212,19 +129,14 @@ get_timeseries_id <- function(parameter_type,
                               station_number,
                               ts_name
 ) {
-  params <- list(
-    "request" = "getTimeseriesList",
-    "parametertype_name" = parameter_type,
-    "ts_name" = ts_name,
-    "station_no" = station_number
+  params <- collapse_params(
+    request = "getTimeseriesList",
+    parametertype_name = parameter_type,
+    ts_name = ts_name,
+    station_no = station_number
   )
-
-  get_bom_request <- make_bom_request(params)
-
-  return(get_bom_request)
+  make_bom_request(params)
 }
-
-
 
 #' @title Retrieve timeseries values
 #' @description
@@ -245,15 +157,50 @@ get_timeseries_values <- function(ts_id,
                                   end_date,
                                   return_fields
 ) {
-  params <- list(
-    "request" = "getTimeseriesValues",
-    "ts_id" = ts_id,
-    "from" = start_date,
-    "to" = end_date,
-    "returnfields" = paste(return_fields, collapse = ",")
+  params <- collapse_params(
+    request = "getTimeseriesValues",
+    ts_id = ts_id,
+    from = start_date,
+    to = end_date,
+    returnfields = paste(return_fields, collapse = ",")
   )
+  make_bom_request(params)
+}
 
-  get_bom_request <- make_bom_request(params)
+get_timezone <- function(parameter_type, station_number, default = "UTC") {
+  data_owner <- get_data_owner(parameter_type, station_number)
+  state <- stringr::str_split_fixed(data_owner, " -", n = 2)[1]
+  if (state %in% c("ACT", "ACTNSW", "NSW", "QLD", "TAS", "VIC")) {
+    tz <- "Australia/Queensland" # AEST
+  } else if (state %in% c("SA", "NT")) {
+    tz <- "Australia/Darwin" # ACST
+  } else if (state == "WA") {
+    tz <- "Australia/Perth" # AWST
+  } else {
+    message("Unable to fine gague timezone, returning default")
+    tz <- as.character(default)
+  }
+  tz
+}
 
-  return(get_bom_request)
+parse_bom_date <- function(d, tz) {
+  if (is.character(d)) {
+    d <- lubridate::as_date(d, format = "%Y-%m-%d")
+  }
+  if (is.na(d)) {
+    stop("Dates must be formatted as %Y-%m-%d (e.g. 2000-01-01)")
+  }
+  if (lubridate::is.Date(d)) {
+    d <- lubridate::force_tz(lubridate::as_datetime(d), tz = tz)
+  } else if (!lubridate::is.POSIXt(d)) {
+    stop("Provide dates as a character, date, or datetime object")
+  }
+  # Fix the offset because BoM expects 00:00 style
+  # despite 0000 conforming to ISO8601
+  d <- sub(
+    "(.*\\+)(\\d{2})(\\d{2})",
+    "\\1\\2:\\3",
+    lubridate::format_ISO8601(d, usetz = TRUE)
+  )
+  d
 }
