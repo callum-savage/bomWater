@@ -30,3 +30,15 @@ test_that("I can get a list of multiple stations", {
   expect_equal(nrow(r), 2)
   expect_equal(r$station_name[2], "Cotter R. at Gingera")
 })
+
+test_that("I can get a parameter list", {
+  r <- get_parameter_list(station_number = "410730")
+  expect_equal(nrow(r), 7)
+  expect_equal(ncol(r), 4)
+})
+
+test_that("I can get a parameter list for multiple stations", {
+  r <- get_parameter_list(station_number = c("410730", "570946"))
+  expect_equal(nrow(r), 12)
+  expect_equal(unique(r$station_name), c("Cotter R. at Gingera", "Cotter Hut"))
+})
