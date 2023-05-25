@@ -1,18 +1,18 @@
+# TODO document possible params
+
 #' Query the BOM WISKI API
 #'
 #' This function queries the Bureau of Meteorology (BOM) Water Data KISTERS API.
 #' A parameter list is passed to make a the request and the JSON return is
-#' parsed depending on what is requested. This function can be used if you want
-#' to build your own JSON queries.
-#'
+#' parsed depending on what is requested. This function powers the `get_`
+#' functions in this package, however it can also be used if you want to build
+#' custom queries.
 #' @param params A named list of key-value pairs.
 #' @param max_tries The maximum number of times to retry the request, silently
 #'   capped at 5 tries.
-#'
 #' @returns A tibble with columns depending on the request. For
 #'   \code{\link{get_timeseries}} requests, a tibble with zero rows is returned
 #'   if the query has no result.
-#'
 #' @export
 make_bom_request <- function(params, max_tries = 1) {
   req <- construct_bom_req(params, max_tries)
