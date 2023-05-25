@@ -88,48 +88,75 @@ bw_interpolation_types <- function() {
   bw_interpolation_types_data
 }
 
-
 bw_return_fields <- function(request) {
-  # get station list
-  # return_fields <- c(
-  #   "station_name",
-  #   "station_longname",
-  #   "station_no",
-  #   "station_id",
-  #   "station_latitude",
-  #   "station_longitude",
-  #   "station_carteasting",
-  #   "station_cartnorthing",
-  #   "stationparameter_name",
-  #   "station_georefsystem",
-  #   "catchment_no",
-  #   "catchment_id",
-  #   "catchment_name",
-  #   "site_no",
-  #   "site_id",
-  #   "site_name",
-  #   "parametertype_id",
-  #   "parametertype_name",
-  #   "object_type",
-  #   "custom_attributes"
-  # )
+  getStationList <- c(
+    "station_name",
+    "station_longname",
+    "station_no",
+    "station_id",
+    "station_latitude",
+    "station_longitude",
+    "station_carteasting",
+    "station_cartnorthing",
+    "stationparameter_name",
+    "station_georefsystem",
+    "catchment_no",
+    "catchment_id",
+    "catchment_name",
+    "site_no",
+    "site_id",
+    "site_name",
+    "parametertype_id",
+    "parametertype_name",
+    "object_type",
+    "custom_attributes"
+  )
 
-  #get_parameter_list
+  getParameterList <- c(
+    "station_no",
+    "station_id",
+    "station_name",
+    "stationparameter_id",
+    "stationparameter_no",
+    "stationparameter_name",
+    "stationparameter_longname",
+    "site_id",
+    "site_no",
+    "site_name",
+    "parametertype_id",
+    "parametertype_name",
+    "parametertype_longname",
+    "parametertype_unitname",
+    "parametertype_shortunitname"
+  )
 
-  #' * station_no',
-  #' * station_id
-  #' * station_name
-  #' * stationparameter_id
-  #' * stationparameter_no
-  #' * stationparameter_name
-  #' * stationparameter_longname
-  #' * site_id
-  #' * site_no
-  #' * site_name
-  #' * parametertype_id
-  #' * parametertype_name
-  #' * parametertype_longname
-  #' * parametertype_unitname
-  #' * parametertype_shortunitname
+  getTimeseriesValues <- c(
+    "Timestamp",
+    "Value",
+    "Quality Code",
+    "Interpolation Type",
+    "Absolute Value",
+    "AV Interpolation",
+    "AV Quality Code",
+    "Runoff Value",
+    "RV Interpolation",
+    "RV Quality Code",
+    "Aggregation",
+    "Accuracy"
+  )
 
+
+  # TODO use pivot instead
+  # also maybe save data prep code?
+  bw_return_fields_data <- tibble::tibble(
+    return_field = c(getStationList, getParameterList, getTimeseriesValues)
+    ) |>
+    dplyr::mutate(
+      getStationList = return_field %in% getStationList,
+      getParameterList = return_field %in% getParameterList,
+      getTimeseriesValues = return_field %in% getTimeseriesValues
+    ) |>
+    dplyr::distinct()
+
+  dplyr::filter(bw_return_fields_data, .data[[request]])$return_field
 }

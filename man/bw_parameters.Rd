@@ -15,7 +15,7 @@ The conversion of SOS2 quality codes into BOM quality codes is from the
 which also contains additional information on how these codes were developed.
 }
 \usage{
-bw_parameters(pars)
+bw_parameters(continuity = NULL)
 }
 \arguments{
 \item{pars}{Optional: if empty all available parameters will be returned.
