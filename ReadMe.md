@@ -118,6 +118,8 @@ get_station_list(parameter = 'Ground Water Level')
 
 ## Design philosphy
 - Intentionally designed to simplify requests and output. For fine control use make_Bom_request to construct your own calls
+- Most requests are determined by a combination of station_number and parameter. If multiple values are allowed for these fields, the argument is pluralised
+   e.g. station_numbers, parameters
 - All 'get' functions always return a tibble (including single column response)
    - if there's no result, a zero-row tibble is returned
    - the columns will correspond to the values (and order) provided by 'return_fields'

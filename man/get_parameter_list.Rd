@@ -6,16 +6,15 @@
 \usage{
 get_parameter_list(
   station_number,
-  return_fields = c("station_no", "station_id", "station_name", "parametertype_id",
-    "parametertype_name", "parametertype_unitname", "parametertype_shortunitname")
+  return_fields = c("station_no", "station_name", "parametertype_name",
+    "parametertype_unitname")
 )
 }
 \arguments{
-\item{station_number}{A single or multiple vector of AWRC station
-numbers.}
+\item{station_number}{A single or multiple vector of AWRC station numbers.}
 
-\item{return_fields}{(Optional) Station parameter details to be returned.
-By default the return fields are: station_no, station_id, station_name,
+\item{return_fields}{(Optional) Station parameter details to be returned. By
+default the return fields are: station_no, station_id, station_name,
 parametertype_id, parametertype_name, parametertype_unitname
 parametertype_shortunitname.}
 }
@@ -23,30 +22,13 @@ parametertype_shortunitname.}
 A tibble with columns for each of the return fields.
 }
 \description{
-\code{get_parameter_list} returns the parameters that can be retrieved at one or
-more stations.
+\code{get_parameter_list} returns the parameters that can be
+retrieved at one or more stations.
 }
 \details{
-The default return fields have been selected to generally return the most
-useful fields while reducing duplication of metadata.
-The full list of return fields:
-\itemize{
-\item station_no',
-\item station_id
-\item station_name
-\item stationparameter_id
-\item stationparameter_no
-\item stationparameter_name
-\item stationparameter_longname
-\item site_id
-\item site_no
-\item site_name
-\item parametertype_id
-\item parametertype_name
-\item parametertype_longname
-\item parametertype_unitname
-\item parametertype_shortunitname
-}
+The default return fields have been selected to generally return the
+most useful fields while reducing duplication of metadata. The full list of
+return fields:
 }
 \examples{
 # Return parameters for a single station

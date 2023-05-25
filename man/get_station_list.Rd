@@ -2,105 +2,50 @@
 % Please edit documentation in R/get_list.R
 \name{get_station_list}
 \alias{get_station_list}
-\title{Retrieve water observation stations}
+\title{List water observation stations}
 \usage{
 get_station_list(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Level",
   station_number = NULL,
   bbox = NULL,
-  return_fields = c("station_name", "station_no", "station_id", "station_latitude",
+  return_fields = c("station_no", "station_name", "station_latitude",
     "station_longitude")
 )
 }
 \arguments{
-\item{parameter_type}{The parameter for the station request (e.g. Water
-Course Discharge, Storage Level)}
+\item{parameter}{The parameter for the station request. Defaults to
+"Water Course Level".}
 
-\item{station_number}{Optional: a single or multiple vector of AWRC station
-numbers.}
+\item{station_number}{Optional: a vector of AWRC station numbers.}
 
 \item{bbox}{Optional: a bounding box to get stations in a region of interest.
 Takes a vector ordered xmin, ymin, xmax, ymax.}
 
-\item{return_fields}{Station details to be returned. By default the columns
-returned are station name, number, ID, latitude and longitude. Can be
-customised with a vector of parameters.}
+\item{return_fields}{A character vector of station details to be returned.
+See [return_fields()] for a full list of available fields.}
 }
 \value{
-With the default return fields, a tibble with columns station_name,
-station_no, station_id, station_latitude, station_longitude.
+A tibble with columns gven by return_fields.
 }
 \description{
-\code{get_station_list} queries Water Data Online and returns station details.
-Queries can be input with the desired \code{parameter_type} to find all the
+`get_station_list` queries Water Data Online and returns station details.
+Queries can be input with the desired `parameter` to find all the
 stations on record. If you already have a vector of station numbers, you can
-pass the vector to \code{station_number} and return the details of those
-stations.
-\code{return_fields} can be customised to return various data about the stations.
-}
-\details{
-Possible return fields for \code{get_station_list()} are:
-\itemize{
-\item station_name
-\item station_longname
-\item station_no
-\item station_id
-\item station_latitude
-\item station_longitude
-\item station_carteasting
-\item station_cartnorthing
-\item stationparameter_name
-\item station_georefsystem
-\item catchment_no
-\item catchment_id
-\item catchment_name
-\item site_no
-\item site_id
-\item site_name
-\item parametertype_id
-\item parametertype_name
-\item object_type
-\item custom_attributes
-}
+pass the vector to `station_number` and return the details of those stations.
+`return_fields` can be customised to return various data about the stations.
 }
 \examples{
-# Get all Water Course Discharge Stations
+# Get a list of all Water Course Discharge Stations
 \dontrun{
-get_station_list()
+get_station_list(parameter = "Water Course Discharge")
 }
-# Just the details for Cotter River at Gingera
+# Just get the details for Cotter River at Gingera
 \dontrun{
 get_station_list(station_number = "410730")
 }
-# Rainfall stations
-\dontrun{
-get_station_list(parameter_type = "Rainfall")
-}
-# Vector of return_fields
-return_fields <- c(
-  "station_name",
-  "station_longname",
-  "station_no",
-  "station_id",
-  "station_latitude",
-  "station_longitude",
-  "station_carteasting",
-  "station_cartnorthing",
-  "stationparameter_name",
-  "station_georefsystem",
-  "catchment_no",
-  "catchment_id",
-  "catchment_name",
-  "site_no",
-  "site_id",
-  "site_name",
-  "parametertype_id",
-  "parametertype_name",
-  "object_type",
-  "custom_attributes"
-)
 # Get all attributes for one station
 \dontrun{
-get_station_list("Water Course Discharge", "410730", return_fields)
+all_discharge_fields <- return_fields("Water Course Discharge")
+get_station_list("Water Course Discharge", "410730", return_fields = all_discharge_fields)
 }
 }

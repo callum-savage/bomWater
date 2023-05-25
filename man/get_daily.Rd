@@ -5,7 +5,7 @@
 \title{Get quality-checked timeseries data}
 \usage{
 get_daily(
-  parameter_type,
+  parameter,
   station_number,
   start_date,
   end_date,
@@ -16,7 +16,7 @@ get_daily(
 )
 }
 \arguments{
-\item{parameter_type}{The water data parameter type (e.g. Water Course
+\item{parameter}{The water data parameter type (e.g. Water Course
 Discharge). See \code{\link{parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
@@ -84,7 +84,7 @@ If the request is not valid it will fail.
 # Download daily mean aggregated over the standard day
 \dontrun{
 get_daily(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date = "2020-01-01",
   end_date = "2020-01-31",
@@ -96,7 +96,7 @@ get_daily(
 # Download daily mean aggregated between 9am to 9am
 \dontrun{
 get_daily(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date = "2020-01-01",
   end_date = "2020-01-31",
@@ -108,7 +108,7 @@ get_daily(
 # Download the daily max over the standard day
 \dontrun{
 get_daily(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date = "2020-01-01",
   end_date = "2020-01-31",

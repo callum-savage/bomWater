@@ -1,5 +1,3 @@
-# TODO document possible params
-
 #' Query the BOM WISKI API
 #'
 #' This function queries the Bureau of Meteorology (BOM) Water Data KISTERS API.

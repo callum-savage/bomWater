@@ -1,31 +1,32 @@
-Package: bomWater
 Type: Package
+Package: bomWater
 Title: Download Australian Bureau of Meteorology Water Data
 Version: 0.4.1
-Author: Alexander Buzacott
-Maintainer: Alexander Buzacott <abuz5257@uni.sydney.edu.au>
-Description: An R interface to the Australian Bureau of Meteorology Water Data Online web service.
+Authors@R: c(
+    person("Buzacott", "Alexander", , "abuz5257@uni.sydney.edu.au", role = "aut"),
+    person("Savage", "Callum", , "callum.s.savage@gmail.com", role = c("aut", "cre"))
+  )
+Description: An R interface to the Australian Bureau of Meteorology Water
+    Data Online web service.
 License: MIT + file LICENSE
 URL: https://github.com/buzacott/bomWater
-Encoding: UTF-8
-LazyData: true
 Depends: 
     R (>= 3.5.0)
 Imports: 
     dplyr (>= 0.8.5),
-    tibble (>= 3.0.0),
-    httr (>= 1.4.1),
-    jsonlite (>= 1.6.1),
+    httr2 (>= 0.2.2),
     lubridate (>= 1.7.4),
     stringr (>= 1.4.0),
-    httr2 (>= 0.2.2)
-RoxygenNote: 7.2.3
+    tibble (>= 3.0.0)
 Suggests: 
     ggplot2,
     httptest,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0),
-    curl
-VignetteBuilder: knitr
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3

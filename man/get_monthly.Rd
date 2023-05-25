@@ -4,17 +4,10 @@
 \alias{get_monthly}
 \title{Get quality-checked timeseries data}
 \usage{
-get_monthly(
-  parameter_type,
-  station_number,
-  start_date,
-  end_date,
-  tz,
-  return_fields
-)
+get_monthly(parameter, station_number, start_date, end_date, tz, return_fields)
 }
 \arguments{
-\item{parameter_type}{The water data parameter type (e.g. Water Course
+\item{parameter}{The water data parameter type (e.g. Water Course
 Discharge). See \code{\link{parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
@@ -74,7 +67,7 @@ If the request is not valid it will fail.
 # Monthly average dry air temperature at Corin Dam
 \dontrun{
 get_monthly(
-  parameter_type = "Dry Air Temperature",
+  parameter = "Dry Air Temperature",
   station_number = "570947",
   start_date = "2016-01-01",
   end_date = "2016-06-01"

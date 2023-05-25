@@ -4,10 +4,10 @@
 \alias{get_timeseries_id}
 \title{Retrieve the timeseries ID}
 \usage{
-get_timeseries_id(parameter_type, station_number, ts_name)
+get_timeseries_id(parameter, station_number, ts_name)
 }
 \arguments{
-\item{parameter_type}{The parameter of interest (e.g. Water Course
+\item{parameter}{The parameter of interest (e.g. Water Course
 Discharge).}
 
 \item{station_number}{The AWRC station number.}

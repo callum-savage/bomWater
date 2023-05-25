@@ -4,17 +4,10 @@
 \alias{get_yearly}
 \title{Get quality-checked timeseries data}
 \usage{
-get_yearly(
-  parameter_type,
-  station_number,
-  start_date,
-  end_date,
-  tz,
-  return_fields
-)
+get_yearly(parameter, station_number, start_date, end_date, tz, return_fields)
 }
 \arguments{
-\item{parameter_type}{The water data parameter type (e.g. Water Course
+\item{parameter}{The water data parameter type (e.g. Water Course
 Discharge). See \code{\link{parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
@@ -74,7 +67,7 @@ If the request is not valid it will fail.
 # Download annual rainfall for Cotter Hut
 \dontrun{
 get_yearly(
-  parameter_type = "Rainfall",
+  parameter = "Rainfall",
   station_number = "570946",
   start_date = 2016,
   end_date = 2020

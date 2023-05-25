@@ -5,7 +5,7 @@
 \title{Get quality-checked timeseries data}
 \usage{
 get_as_stored(
-  parameter_type,
+  parameter,
   station_number,
   start_date,
   end_date,
@@ -14,7 +14,7 @@ get_as_stored(
 )
 }
 \arguments{
-\item{parameter_type}{The water data parameter type (e.g. Water Course
+\item{parameter}{The water data parameter type (e.g. Water Course
 Discharge). See \code{\link{parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
@@ -75,7 +75,7 @@ If the request is not valid it will fail.
 # PLUMB RD @ NARRABRI'
 \dontrun{
 get_as_stored(
-  parameter_type = "Ground Water Level",
+  parameter = "Ground Water Level",
   station_number = "GW971623.3.3",
   start_date = "2020-03-01",
   end_date = "2020-03-01"

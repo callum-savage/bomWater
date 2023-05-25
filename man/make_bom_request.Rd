@@ -4,22 +4,23 @@
 \alias{make_bom_request}
 \title{Query the BOM WISKI API}
 \usage{
-make_bom_request(params, tries = 1)
+make_bom_request(params, max_tries = 1)
 }
 \arguments{
-\item{params}{A named list of parameters.}
+\item{params}{A named list of key-value pairs.}
 
-\item{tries}{Number of times to query the API. Only a single call is made by
-default, and the maximum number of tries is 5.}
+\item{max_tries}{The maximum number of times to retry the request, silently
+capped at 5 tries.}
 }
 \value{
 A tibble with columns depending on the request. For
   \code{\link{get_timeseries}} requests, a tibble with zero rows is returned
-  if there is no data available for that query.
+  if the query has no result.
 }
 \description{
 This function queries the Bureau of Meteorology (BOM) Water Data KISTERS API.
-A parameter list is passed to make a the request and the JSON return is parsed
-depending on what is requested. This function can be used if you want to
-build your own JSON queries.
+A parameter list is passed to make a the request and the JSON return is
+parsed depending on what is requested. This function powers the `get_`
+functions in this package, however it can also be used if you want to build
+custom queries.
 }

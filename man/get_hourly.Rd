@@ -5,7 +5,7 @@
 \title{Get quality-checked timeseries data}
 \usage{
 get_hourly(
-  parameter_type,
+  parameter,
   station_number,
   start_date,
   end_date,
@@ -14,7 +14,7 @@ get_hourly(
 )
 }
 \arguments{
-\item{parameter_type}{The water data parameter type (e.g. Water Course
+\item{parameter}{The water data parameter type (e.g. Water Course
 Discharge). See \code{\link{parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
@@ -74,7 +74,7 @@ If the request is not valid it will fail.
 # Hourly streamflow Cotter River at Gingera Gauge
 \dontrun{
 get_hourly(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date = "2020-01-01",
   end_date = "2020-01-31"

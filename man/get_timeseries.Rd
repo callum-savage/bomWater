@@ -5,17 +5,17 @@
 \title{Get time series}
 \usage{
 get_timeseries(
-  parameter_type,
+  parameter,
   station_number,
   start_date,
   end_date,
-  tz = "UTC",
-  return_fields,
+  tz = NULL,
+  return_fields = c("Timestamp", "Value", "Quality Code"),
   ts_name
 )
 }
 \arguments{
-\item{parameter_type}{The water data parameter type (e.g. Water Course
+\item{parameter}{The water data parameter type (e.g. Water Course
 Discharge). See \code{\link{parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
@@ -75,7 +75,7 @@ If the request is not valid it will fail.
 # Accessible dam storage, as shown on the BoM Water Storage dashboard
 \dontrun{
 get_timeseries(
-  parameter_type = "Storage Volume",
+  parameter = "Storage Volume",
   "G8150011",
   "2020-01-01",
   "2020-01-31",
