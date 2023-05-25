@@ -114,3 +114,29 @@ get_station_list(parameter_type = 'Ground Water Level')
 10 02/DD31 OB   60930147       388043            -33.2              118.
 # … with 4,429 more rows
 ```
+
+
+## Design philosphy
+- Intentionally designed to simplify requests and output. For fine control use make_Bom_request to construct your own calls
+- All 'get' functions always return a tibble (including single column response)
+   - if there's no result, a zero-row tibble is returned
+   - the columns will correspond to the values (and order) provided by 'return_fields'
+      - the exception is 'custom_attributes', which I need to figure out how to deal with
+   - request fields can also be included in the return fields???????
+   - if multiple stations are requested and not all stations have returned a result a warning is raised
+- metadata functions return a tibble by default, can return a vector with specific arguments
+   - these functions need a naming convention:
+      - bw_parameters
+      - bw_interpolation_types
+      - bw_return_fields
+      - bw_quality_codes
+- helper functions which extract a specific column are named with the prefix extract_ and return a vector
+   - Not user facing
+   - extract_data_owner
+   - extract_timezone
+   - extract_timeseries_id
+- results and calls are always in snake_case (syntactic)
+   - requests may also use title case? actually no, this just adds complexity
+   - interaction with parameters: e.g. station_number and parameter are uniform, and converted to bom names before request
+   - in general, outputs are based on what you see on bom water data online
+   - show how to convert to sentene case in vignette
