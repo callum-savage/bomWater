@@ -12,7 +12,7 @@
 #' \href{http://www.bom.gov.au/water/hrs/qc_doc.shtml}{Streamflow data quality codes for Hydrologic Reference Stations},
 #' which also contains additional information on how these codes were developed.
 #'
-# use_data(bw_quality_codes_data, bw_interpolation_types_data, internal = TRUE, overwrite = TRUE)
+# load
 
 
 #' @title Available water parameters
@@ -50,33 +50,13 @@
 #' bw_parameters()
 #' bw_parameters("continuous")
 #' bw_parameters("discrete")
-bw_parameters <- function(pars) {
-  continuous <- c(
-    "Dry Air Temperature",
-    "Relative Humidity",
-    "Wind Speed",
-    "Electrical Conductivity @ 25C",
-    "Turbidity",
-    "pH",
-    "Water Temperature",
-    "Ground Water Level",
-    "Water Course Level",
-    "Water Course Discharge",
-    "Storage Level",
-    "Storage Volume"
-  )
-  discrete <- c(
-    "Rainfall",
-    "Evaporation"
-  )
-
-  if (missing(pars)) {
-    return(c(discrete, continuous))
+bw_parameters <- function(continuity = NULL) {
+  if (is.null(continuity)) {
+    bw_parameters_data$parameter
+  } else if (continuity %in% c("continuous", "discrete")) {
+    dplyr::filter(bw_parameters_data, continuity == !!continuity)$parameter
   } else {
-    if (!tolower(pars) %in% c("continuous", "discrete")) {
-      stop("Invalid parameter category entered")
-    }
-    return(get(pars))
+    stop("continuity must one of continutous, discrete, or NULL")
   }
 }
 
