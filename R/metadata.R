@@ -166,3 +166,49 @@ interpolation_types <- function() {
     )
   )
 }
+
+
+return_fields <- function(request) {
+  # get station list
+  return_fields <- c(
+    "station_name",
+    "station_longname",
+    "station_no",
+    "station_id",
+    "station_latitude",
+    "station_longitude",
+    "station_carteasting",
+    "station_cartnorthing",
+    "stationparameter_name",
+    "station_georefsystem",
+    "catchment_no",
+    "catchment_id",
+    "catchment_name",
+    "site_no",
+    "site_id",
+    "site_name",
+    "parametertype_id",
+    "parametertype_name",
+    "object_type",
+    "custom_attributes"
+  )
+
+  #get_parameter_list
+
+  #' * station_no',
+  #' * station_id
+  #' * station_name
+  #' * stationparameter_id
+  #' * stationparameter_no
+  #' * stationparameter_name
+  #' * stationparameter_longname
+  #' * site_id
+  #' * site_no
+  #' * site_name
+  #' * parametertype_id
+  #' * parametertype_name
+  #' * parametertype_longname
+  #' * parametertype_unitname
+  #' * parametertype_shortunitname
+
+}
