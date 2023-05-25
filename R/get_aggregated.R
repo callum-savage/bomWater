@@ -18,7 +18,7 @@ get_as_stored <- function(parameter,
                           end_date,
                           tz = NULL,
                           return_fields = c("Timestamp", "Value", "Quality Code")) {
-  parameter <- parameters()[tolower(parameter) == tolower(parameters())]
+  parameter <- bw_parameters()[tolower(parameter) == tolower(bw_parameters())]
   if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
@@ -54,7 +54,7 @@ get_hourly <- function(parameter,
                        end_date,
                        tz = NULL,
                        return_fields = c("Timestamp", "Value", "Quality Code", "Interpolation Type")) {
-  parameter <- parameters()[tolower(parameter) == tolower(parameters())]
+  parameter <- bw_parameters()[tolower(parameter) == tolower(bw_parameters())]
 
   if (!parameter %in% c(
     "Water Course Discharge",
@@ -134,14 +134,14 @@ get_daily <- function(parameter,
                       tz,
                       return_fields) {
   parameter <-
-    parameters()[tolower(parameter) == tolower(parameters())]
+    bw_parameters()[tolower(parameter) == tolower(bw_parameters())]
   if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
 
   # Handle possible formats of var input
   if (is.null(var)) {
-    if (parameter %in% parameters("discrete")) {
+    if (parameter %in% bw_parameters("discrete")) {
       var <- "Total"
     } else {
       var <- "Mean"
@@ -157,7 +157,7 @@ get_daily <- function(parameter,
 
   ts_name <- paste0("DMQaQc.Merged.Daily", var, ".", aggregation)
 
-  if (parameter %in% parameters("continuous")) {
+  if (parameter %in% bw_parameters("continuous")) {
     valid_daily_ts <- c(
       "DMQaQc.Merged.DailyMean.24HR",
       "DMQaQc.Merged.DailyMax.24HR",
@@ -171,7 +171,7 @@ get_daily <- function(parameter,
     }
   }
 
-  if (parameter %in% parameters("discrete")) {
+  if (parameter %in% bw_parameters("discrete")) {
     valid_daily_ts <- c(
       "DMQaQc.Merged.DailyTotal.09HR",
       "DMQaQc.Merged.DailyTotal.24HR"
@@ -220,16 +220,16 @@ get_monthly <- function(parameter,
                         tz,
                         return_fields) {
   parameter <-
-    parameters()[tolower(parameter) == tolower(parameters())]
+    bw_parameters()[tolower(parameter) == tolower(bw_parameters())]
   if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
 
-  if (parameter %in% parameters("continuous")) {
+  if (parameter %in% bw_parameters("continuous")) {
     ts_name <- "DMQaQc.Merged.MonthlyMean.CalMonth"
   }
 
-  if (parameter %in% parameters("discrete")) {
+  if (parameter %in% bw_parameters("discrete")) {
     ts_name <- c("DMQaQc.Merged.MonthlyTotal.CalMonth")
   }
 
@@ -277,7 +277,7 @@ get_yearly <- function(parameter,
                        tz,
                        return_fields) {
   parameter <-
-    parameters()[tolower(parameter) == tolower(parameters())]
+    bw_parameters()[tolower(parameter) == tolower(bw_parameters())]
   if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
@@ -285,11 +285,11 @@ get_yearly <- function(parameter,
   start_date <- paste0(stringr::str_sub(start_date, 1, 4), "-01-01")
   end_date <- paste0(stringr::str_sub(end_date, 1, 4), "-12-31")
 
-  if (parameter %in% parameters("continuous")) {
+  if (parameter %in% bw_parameters("continuous")) {
     ts_name <- "DMQaQc.Merged.YearlyMean.CalYear"
   }
 
-  if (parameter %in% parameters("discrete")) {
+  if (parameter %in% bw_parameters("discrete")) {
     ts_name <- c("DMQaQc.Merged.YearlyTotal.CalYear")
   }
 

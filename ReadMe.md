@@ -29,7 +29,7 @@ The following Water Data Online variables can be accessed using these functions:
 | Relative Humidity              | %      |
 | Wind Speed                     | m/s    |
 
-Make sure formatting of the parameter types is as in the table above when making requests. The function `parameters()` can be used to retrieve this from within R.
+Make sure formatting of the parameter types is as in the table above when making requests. The function `bw_parameters()` can be used to retrieve this from within R.
 
 Station information can be queried using `get_station_list()`, as in the example below.
 

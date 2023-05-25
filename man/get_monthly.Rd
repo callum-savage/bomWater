@@ -8,7 +8,7 @@ get_monthly(parameter, station_number, start_date, end_date, tz, return_fields)
 }
 \arguments{
 \item{parameter}{The water data parameter type (e.g. Water Course
-Discharge). See \code{\link{parameters()}} for a full list.}
+Discharge). See \code{\link{bw_parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
 

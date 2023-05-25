@@ -17,7 +17,7 @@ get_daily(
 }
 \arguments{
 \item{parameter}{The water data parameter type (e.g. Water Course
-Discharge). See \code{\link{parameters()}} for a full list.}
+Discharge). See \code{\link{bw_parameters()}} for a full list.}
 
 \item{station_number}{The AWRC station number.}
 
