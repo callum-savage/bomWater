@@ -5,26 +5,26 @@
 #' # PLUMB RD @ NARRABRI'
 #' \dontrun{
 #' get_as_stored(
-#'   parameter_type = "Ground Water Level",
+#'   parameter = "Ground Water Level",
 #'   station_number = "GW971623.3.3",
 #'   start_date = "2020-03-01",
 #'   end_date = "2020-03-01"
 #' )
 #' }
 #' @export
-get_as_stored <- function(parameter_type,
+get_as_stored <- function(parameter,
                           station_number,
                           start_date,
                           end_date,
                           tz = NULL,
                           return_fields = c("Timestamp", "Value", "Quality Code")) {
-  parameter_type <- parameters()[tolower(parameter_type) == tolower(parameters())]
-  if (length(parameter_type) == 0) {
+  parameter <- parameters()[tolower(parameter) == tolower(parameters())]
+  if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
 
   timeseries_values <- get_timeseries(
-    parameter_type = parameter_type,
+    parameter = parameter,
     station_number = station_number,
     start_date = start_date,
     end_date = end_date,
@@ -41,34 +41,34 @@ get_as_stored <- function(parameter_type,
 #' # Hourly streamflow Cotter River at Gingera Gauge
 #' \dontrun{
 #' get_hourly(
-#'   parameter_type = "Water Course Discharge",
+#'   parameter = "Water Course Discharge",
 #'   station_number = "410730",
 #'   start_date = "2020-01-01",
 #'   end_date = "2020-01-31"
 #' )
 #' }
 #' @export
-get_hourly <- function(parameter_type,
+get_hourly <- function(parameter,
                        station_number,
                        start_date,
                        end_date,
                        tz = NULL,
                        return_fields = c("Timestamp", "Value", "Quality Code", "Interpolation Type")) {
-  parameter_type <- parameters()[tolower(parameter_type) == tolower(parameters())]
+  parameter <- parameters()[tolower(parameter) == tolower(parameters())]
 
-  if (!parameter_type %in% c(
+  if (!parameter %in% c(
     "Water Course Discharge",
     "Water Course Level",
     "Storage Level",
     "Storage Volume"
   )) {
     stop(
-      paste("Hourly data is not available for parameter_type", parameter_type)
+      paste("Hourly data is not available for parameter", parameter)
     )
   }
 
   timeseries_values <- get_timeseries(
-    parameter_type = parameter_type,
+    parameter = parameter,
     station_number = station_number,
     start_date = start_date,
     end_date = end_date,
@@ -91,7 +91,7 @@ get_hourly <- function(parameter_type,
 #' # Download daily mean aggregated over the standard day
 #' \dontrun{
 #' get_daily(
-#'   parameter_type = "Water Course Discharge",
+#'   parameter = "Water Course Discharge",
 #'   station_number = "410730",
 #'   start_date = "2020-01-01",
 #'   end_date = "2020-01-31",
@@ -103,7 +103,7 @@ get_hourly <- function(parameter_type,
 #' # Download daily mean aggregated between 9am to 9am
 #' \dontrun{
 #' get_daily(
-#'   parameter_type = "Water Course Discharge",
+#'   parameter = "Water Course Discharge",
 #'   station_number = "410730",
 #'   start_date = "2020-01-01",
 #'   end_date = "2020-01-31",
@@ -115,7 +115,7 @@ get_hourly <- function(parameter_type,
 #' # Download the daily max over the standard day
 #' \dontrun{
 #' get_daily(
-#'   parameter_type = "Water Course Discharge",
+#'   parameter = "Water Course Discharge",
 #'   station_number = "410730",
 #'   start_date = "2020-01-01",
 #'   end_date = "2020-01-31",
@@ -125,7 +125,7 @@ get_hourly <- function(parameter_type,
 #' }
 #'
 #' @export
-get_daily <- function(parameter_type,
+get_daily <- function(parameter,
                       station_number,
                       start_date,
                       end_date,
@@ -133,15 +133,15 @@ get_daily <- function(parameter_type,
                       aggregation = "24HR",
                       tz,
                       return_fields) {
-  parameter_type <-
-    parameters()[tolower(parameter_type) == tolower(parameters())]
-  if (length(parameter_type) == 0) {
+  parameter <-
+    parameters()[tolower(parameter) == tolower(parameters())]
+  if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
 
   # Handle possible formats of var input
   if (is.null(var)) {
-    if (parameter_type %in% parameters("discrete")) {
+    if (parameter %in% parameters("discrete")) {
       var <- "Total"
     } else {
       var <- "Mean"
@@ -157,13 +157,13 @@ get_daily <- function(parameter_type,
 
   ts_name <- paste0("DMQaQc.Merged.Daily", var, ".", aggregation)
 
-  if (parameter_type %in% parameters("continuous")) {
+  if (parameter %in% parameters("continuous")) {
     valid_daily_ts <- c(
       "DMQaQc.Merged.DailyMean.24HR",
       "DMQaQc.Merged.DailyMax.24HR",
       "DMQaQc.Merged.DailyMin.24HR"
     )
-    if (parameter_type == "Water Course Discharge") {
+    if (parameter == "Water Course Discharge") {
       valid_daily_ts <- c(
         valid_daily_ts,
         "DMQaQc.Merged.DailyMean.09HR"
@@ -171,7 +171,7 @@ get_daily <- function(parameter_type,
     }
   }
 
-  if (parameter_type %in% parameters("discrete")) {
+  if (parameter %in% parameters("discrete")) {
     valid_daily_ts <- c(
       "DMQaQc.Merged.DailyTotal.09HR",
       "DMQaQc.Merged.DailyTotal.24HR"
@@ -179,7 +179,7 @@ get_daily <- function(parameter_type,
   }
 
   if (!ts_name %in% valid_daily_ts) {
-    stop("Invalid combination of parameter_type, var and aggregation")
+    stop("Invalid combination of parameter, var and aggregation")
   }
 
   if (missing(tz)) tz <- NULL
@@ -189,7 +189,7 @@ get_daily <- function(parameter_type,
   }
 
   timeseries_values <- get_timeseries(
-    parameter_type,
+    parameter,
     station_number,
     start_date,
     end_date,
@@ -206,34 +206,34 @@ get_daily <- function(parameter_type,
 #' # Monthly average dry air temperature at Corin Dam
 #' \dontrun{
 #' get_monthly(
-#'   parameter_type = "Dry Air Temperature",
+#'   parameter = "Dry Air Temperature",
 #'   station_number = "570947",
 #'   start_date = "2016-01-01",
 #'   end_date = "2016-06-01"
 #' )
 #' }
 #' @export
-get_monthly <- function(parameter_type,
+get_monthly <- function(parameter,
                         station_number,
                         start_date,
                         end_date,
                         tz,
                         return_fields) {
-  parameter_type <-
-    parameters()[tolower(parameter_type) == tolower(parameters())]
-  if (length(parameter_type) == 0) {
+  parameter <-
+    parameters()[tolower(parameter) == tolower(parameters())]
+  if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
 
-  if (parameter_type %in% parameters("continuous")) {
+  if (parameter %in% parameters("continuous")) {
     ts_name <- "DMQaQc.Merged.MonthlyMean.CalMonth"
   }
 
-  if (parameter_type %in% parameters("discrete")) {
+  if (parameter %in% parameters("discrete")) {
     ts_name <- c("DMQaQc.Merged.MonthlyTotal.CalMonth")
   }
 
-  if (!exists("ts_name")) stop("Invalid parameter_type")
+  if (!exists("ts_name")) stop("Invalid parameter")
 
   if (missing(tz)) tz <- NULL
 
@@ -242,7 +242,7 @@ get_monthly <- function(parameter_type,
   }
 
   timeseries_values <- get_timeseries(
-    parameter_type,
+    parameter,
     station_number,
     start_date,
     end_date,
@@ -262,7 +262,7 @@ get_monthly <- function(parameter_type,
 #' # Download annual rainfall for Cotter Hut
 #' \dontrun{
 #' get_yearly(
-#'   parameter_type = "Rainfall",
+#'   parameter = "Rainfall",
 #'   station_number = "570946",
 #'   start_date = 2016,
 #'   end_date = 2020
@@ -270,30 +270,30 @@ get_monthly <- function(parameter_type,
 #' }
 #'
 #' @export
-get_yearly <- function(parameter_type,
+get_yearly <- function(parameter,
                        station_number,
                        start_date,
                        end_date,
                        tz,
                        return_fields) {
-  parameter_type <-
-    parameters()[tolower(parameter_type) == tolower(parameters())]
-  if (length(parameter_type) == 0) {
+  parameter <-
+    parameters()[tolower(parameter) == tolower(parameters())]
+  if (length(parameter) == 0) {
     stop("Invalid parameter requested")
   }
 
   start_date <- paste0(stringr::str_sub(start_date, 1, 4), "-01-01")
   end_date <- paste0(stringr::str_sub(end_date, 1, 4), "-12-31")
 
-  if (parameter_type %in% parameters("continuous")) {
+  if (parameter %in% parameters("continuous")) {
     ts_name <- "DMQaQc.Merged.YearlyMean.CalYear"
   }
 
-  if (parameter_type %in% parameters("discrete")) {
+  if (parameter %in% parameters("discrete")) {
     ts_name <- c("DMQaQc.Merged.YearlyTotal.CalYear")
   }
 
-  if (!exists("ts_name")) stop("Invalid parameter_type")
+  if (!exists("ts_name")) stop("Invalid parameter")
 
   if (missing(tz)) tz <- NULL
 
@@ -302,7 +302,7 @@ get_yearly <- function(parameter_type,
   }
 
   timeseries_values <- get_timeseries(
-    parameter_type,
+    parameter,
     station_number,
     start_date,
     end_date,

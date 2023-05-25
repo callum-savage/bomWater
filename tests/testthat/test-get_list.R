@@ -1,6 +1,6 @@
 test_that("I can get a station list", {
   r <- get_station_list(
-    parameter_type = "Rainfall",
+    parameter = "Rainfall",
     station_number = "570946",
     return_fields = c(
       "station_no",
@@ -22,7 +22,7 @@ test_that("I can get a station list", {
 
 test_that("I can get a list of multiple stations", {
   r <- get_station_list(
-    parameter_type = "Rainfall",
+    parameter = "Rainfall",
     station_number = c("570946", "410730")
   )
 

@@ -1,6 +1,6 @@
 test_that("Requests with no result return an empty tibble", {
   r <- get_monthly(
-    parameter_type = "Evaporation",
+    parameter = "Evaporation",
     station_number = "410102",
     start_date = "2019-01-01",
     end_date = "2019-12-31",

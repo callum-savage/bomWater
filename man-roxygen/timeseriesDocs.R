@@ -4,7 +4,7 @@
 #' This function returns a quality-checked timeseries from
 #' Water Data Online.
 #'
-#' @param parameter_type The water data parameter type (e.g. Water Course
+#' @param parameter The water data parameter type (e.g. Water Course
 #' Discharge). See \code{\link{parameters()}} for a full list.
 #' @param station_number The AWRC station number.
 #' @param start_date Start date formatted as a string or date class

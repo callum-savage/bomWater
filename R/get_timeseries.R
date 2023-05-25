@@ -23,7 +23,7 @@
 #' * Accuracy
 #'
 #' If the request is not valid it will fail.
-#' @param parameter_type The water data parameter type (e.g. Water Course
+#' @param parameter The water data parameter type (e.g. Water Course
 #' Discharge). See \code{\link{parameters()}} for a full list.
 #' @param station_number The AWRC station number.
 #' @param start_date Start date formatted as a string or date class
@@ -49,7 +49,7 @@
 #' # Accessible dam storage, as shown on the BoM Water Storage dashboard
 #' \dontrun{
 #' get_timeseries(
-#'   parameter_type = "Storage Volume",
+#'   parameter = "Storage Volume",
 #'   "G8150011",
 #'   "2020-01-01",
 #'   "2020-01-31",
@@ -60,7 +60,7 @@
 #' }
 #' # See the linked SOS2 manual in See Also to find more timeseries names
 #' @export
-get_timeseries <- function(parameter_type,
+get_timeseries <- function(parameter,
                            station_number,
                            start_date,
                            end_date,
@@ -68,7 +68,7 @@ get_timeseries <- function(parameter_type,
                            return_fields = c("Timestamp", "Value", "Quality Code"),
                            ts_name) {
   if (is.null(tz)) {
-    tz <- get_timezone(parameter_type, station_number, default = "UTC")
+    tz <- get_timezone(parameter, station_number, default = "UTC")
   } else if (!(tz %in% OlsonNames())) {
     stop("Invalid tz argument. Check it is in OlsonNames().")
   }
@@ -84,7 +84,7 @@ get_timeseries <- function(parameter_type,
   }
 
   timeseries_id <- get_timeseries_id(
-    parameter_type = parameter_type,
+    parameter = parameter,
     station_number = station_number,
     ts_name = ts_name
   )
@@ -118,20 +118,20 @@ get_timeseries <- function(parameter_type,
 #' @description
 #' `get_timeseries_id` retrieves the timeseries ID that can be used to obtain
 #' values for a parameter type, station and timeseries combination.
-#' @param parameter_type The parameter of interest (e.g. Water Course
+#' @param parameter The parameter of interest (e.g. Water Course
 #' Discharge).
 #' @param station_number The AWRC station number.
 #' @param ts_name The BoM time series name (e.g. DMQaQc.Merged.DailyMean.24HR).
 #' @return
 #' Returns a tibble with columns station_name, station_no, station_id, ts_id,
 #' ts_name, parametertype_id, parametertype_name.
-get_timeseries_id <- function(parameter_type,
+get_timeseries_id <- function(parameter,
                               station_number,
                               ts_name
 ) {
   params <- collapse_params(
     request = "getTimeseriesList",
-    parametertype_name = parameter_type,
+    parametertype_name = parameter,
     ts_name = ts_name,
     station_no = station_number
   )
@@ -167,8 +167,8 @@ get_timeseries_values <- function(ts_id,
   make_bom_request(params)
 }
 
-get_timezone <- function(parameter_type, station_number, default = "UTC") {
-  data_owner <- get_data_owner(parameter_type, station_number)
+get_timezone <- function(parameter, station_number, default = "UTC") {
+  data_owner <- get_data_owner(parameter, station_number)
   state <- stringr::str_split_fixed(data_owner, " -", n = 2)[1]
   if (state %in% c("ACT", "ACTNSW", "NSW", "QLD", "TAS", "VIC")) {
     tz <- "Australia/Queensland" # AEST

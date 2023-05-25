@@ -54,7 +54,7 @@ The license and copyright for the data can be viewed under the copyright tab at 
 library(bomWater)
 
 # Daily streamflow from Cotter River at Gingera (in m3/s)
-cotter_river <- get_daily(parameter_type = 'Water Course Discharge',
+cotter_river <- get_daily(parameter = 'Water Course Discharge',
                           station_number = '410730',
                           start_date     = '2020-01-01',
                           end_date       = '2020-01-31')
@@ -76,7 +76,7 @@ cotter_river
 # … with 21 more rows
 
 # Monthly total rainfall in mm at Cotter Hut
-cotter_hut <- get_monthly(parameter_type = 'Rainfall',
+cotter_hut <- get_monthly(parameter = 'Rainfall',
                           station_number = '570946',
                           start_date     = '2019-01-01',
                           end_date       = '2019-12-31')
@@ -98,7 +98,7 @@ cotter_hut
 12 2019-12-01 00:00:00   8               10
 
 # Get a list of groundwater bore data available from water data online
-get_station_list(parameter_type = 'Ground Water Level')
+get_station_list(parameter = 'Ground Water Level')
 # A tibble: 4,439 x 5
    station_name station_no station_id station_latitude station_longitude
    <chr>        <chr>           <int>            <dbl>             <dbl>

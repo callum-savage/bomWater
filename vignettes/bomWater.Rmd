@@ -24,7 +24,7 @@ start_vignette("bomWater")
 
 ## Using bomWater
 
-A typical workflow begins by querying station information using `get_station_list()` with a specific parameter type. The function `parameters()` returns all the parameters that can be retrieved using `bomWater`. By default `get_station_list()` returns all stations for Water Course Discharge and other parameters can be specified with the argument `parameter_type`. Once the station number of interest is known, it can be used to retrieve quality-checked timeseries using the functions:
+A typical workflow begins by querying station information using `get_station_list()` with a specific parameter type. The function `parameters()` returns all the parameters that can be retrieved using `bomWater`. By default `get_station_list()` returns all stations for Water Course Discharge and other parameters can be specified with the argument `parameter`. Once the station number of interest is known, it can be used to retrieve quality-checked timeseries using the functions:
 
 * `get_hourly()`: retrieves hourly data
 * `get_daily()`: retrieves daily data
@@ -92,7 +92,7 @@ parameters()
 
 ## Using get_station_list()
 
-'get_station_list' queries Water Data Online and returns station details. Queries can be input with the desired 'parameter_type' to find all the stations on record. If you already have a vector of station numbers, you can pass the vector to 'station_number' and return the details of those stations. 'return_fields' can be customised to return various data about the stations.
+'get_station_list' queries Water Data Online and returns station details. Queries can be input with the desired 'parameter' to find all the stations on record. If you already have a vector of station numbers, you can pass the vector to 'station_number' and return the details of those stations. 'return_fields' can be customised to return various data about the stations.
 
 ### Results
 
@@ -102,7 +102,7 @@ With the default return fields, a tibble with columns station_name, station_no, 
 
 ```{r}
 # Get a list of groundwater bores available from water data online
-get_station_list(parameter_type = "Ground Water Level")
+get_station_list(parameter = "Ground Water Level")
 
 # Return information for a single station and customise return fields
 get_station_list(station_number = "410730")
@@ -121,7 +121,7 @@ Returns a tibble with Timestamp, Value and Quality Code.
 ```{r}
 # Cotter River at Gingera
 get_hourly(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date = "2020-01-01",
   end_date = "2020-01-31"
@@ -129,7 +129,7 @@ get_hourly(
 
 # Corin Reservoir
 get_hourly(
-  parameter_type = "Storage Volume",
+  parameter = "Storage Volume",
   station_number = "410742",
   start_date = "2020-01-01",
   end_date = "2020-01-31"
@@ -140,7 +140,7 @@ An example of plotting the data:
 
 ```{r}
 corin <- get_hourly(
-  parameter_type = "Storage Volume",
+  parameter = "Storage Volume",
   station_number = "410742",
   start_date = "2020-01-01",
   end_date = "2020-01-31"
@@ -163,7 +163,7 @@ A tibble with columns Timestamp, Value and Quality Code.
 ```{r}
 # Daily mean streamflow from Cotter River at Gingera (in m3/s) between 09-09
 get_daily(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date     = "2020-01-01",
   end_date       = "2020-01-31",
@@ -172,7 +172,7 @@ get_daily(
 
 # Daily max, only available over the standard day
 get_daily(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date     = "2020-01-01",
   end_date       = "2020-01-31",
@@ -181,7 +181,7 @@ get_daily(
 
 # Daily mean wind speed at Corin Dam
 get_daily(
-  parameter_type = "Wind Speed",
+  parameter = "Wind Speed",
   station_number = "570947",
   start_date     = "2020-01-01",
   end_date       = "2020-01-31"
@@ -201,7 +201,7 @@ A tibble with columns Timestamp, Value and Quality Code.
 ```{r}
 # Monthly total rainfall in mm at Cotter Hut
 get_monthly(
-  parameter_type = "Rainfall",
+  parameter = "Rainfall",
   station_number = "570946",
   start_date     = "2019-01-01",
   end_date       = "2019-12-31"
@@ -209,7 +209,7 @@ get_monthly(
 
 # Monthly mean streamflow rate m3/s at Cotter River at Gingera
 get_monthly(
-  parameter_type = "Water Course Discharge",
+  parameter = "Water Course Discharge",
   station_number = "410730",
   start_date     = "2019-01-01",
   end_date       = "2019-12-31"
@@ -217,7 +217,7 @@ get_monthly(
 
 # Monthly evaporation at Blowering Dam
 get_monthly(
-  parameter_type = "Evaporation",
+  parameter = "Evaporation",
   station_number = "410102",
   start_date     = "2019-01-01",
   end_date       = "2019-12-31"
@@ -238,7 +238,7 @@ A tibble with columns Timestamp, Value and Quality Code.
 ```{r}
 # Annual rainfall at Berthong in Cootamundra
 berthong <- get_yearly(
-  parameter_type = "Rainfall",
+  parameter = "Rainfall",
   station_number = "41000207",
   start_date     = "2010-01-01",
   end_date       = "2019-12-31"
@@ -263,7 +263,7 @@ A tibble with columns Timestamp, Value and Quality Code.
 ```{r}
 # Annual rainfall at Berthong in Cootamundra
 berthong <- get_as_stored(
-  parameter_type = "Rainfall",
+  parameter = "Rainfall",
   station_number = "41000207",
   start_date     = "2019-01-01",
   end_date       = "2019-12-31"

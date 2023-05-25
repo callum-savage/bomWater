@@ -14,7 +14,7 @@ test_that("I can make requests to BoM", {
   return_fields <- c("station_name", "station_no", "station_id", "station_latitude", "station_longitude")
   params <- list(
     request = "getStationList",
-    parameter_type_name = "Water Course Discharge",
+    parameter_name = "Water Course Discharge",
     station_no = "410730",
     returnfields = paste(return_fields, collapse = ",")
   )

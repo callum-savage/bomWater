@@ -1,6 +1,6 @@
 test_that("I can get a timeseries ID", {
   r <- get_timeseries_id(
-    parameter_type = "Water Course Discharge",
+    parameter = "Water Course Discharge",
     station_number = "410730",
     ts_name = "DMQaQc.Merged.DailyMean.24HR"
   )
@@ -29,7 +29,7 @@ test_that("I can get timeseries values", {
 
 test_that("No results for parameter type and ID mistmatch", {
   r <- get_timeseries_id(
-    parameter_type = "Water Course Discharge",
+    parameter = "Water Course Discharge",
     station_number = "570946",
     ts_name = "DMQaQc.Merged.DailyMean.24HR"
   )
@@ -41,7 +41,7 @@ test_that("No results for parameter type and ID mistmatch", {
 
 test_that("get timeseries puts it all together", {
   r <- get_timeseries(
-    parameter_type = "Water Course Discharge",
+    parameter = "Water Course Discharge",
     station_number = "410730",
     start_date = "2020-01-01",
     end_date = "2020-01-07",
