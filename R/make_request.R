@@ -1,13 +1,16 @@
+# TODO document params properly
+# TODO list wrapper functions in See Also
+# TODO list references
+
 #' Query the BOM WISKI API
 #'
-#' This function queries the Bureau of Meteorology (BOM) Water Data KISTERS API.
-#' A parameter list is passed to make a the request and the JSON return is
-#' parsed depending on what is requested. This function powers the `get_`
-#' functions in this package, however it can also be used if you want to build
-#' custom queries.
+#' `make_bom_request` queries the Bureau of Meteorology (BOM) Water Data KISTERS
+#' API and returns the result as a tibble. This function has useful wrappers for
+#' common requests (refer to See Also below), however it can be used directly if
+#' you want to build a custom query.
 #' @param params A named list of key-value pairs.
-#' @param max_tries The maximum number of times to retry the request, silently
-#'   capped at 5 tries.
+#' @param max_tries Optional number number of times to repeat the request if an
+#'   error is returned. Silently capped at 5 tries.
 #' @returns A tibble with columns depending on the request. For
 #'   \code{\link{get_timeseries}} requests, a tibble with zero rows is returned
 #'   if the query has no result.
